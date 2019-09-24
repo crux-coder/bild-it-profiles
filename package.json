@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd bild-it-profiles && cd bild-it-profiles-backend && npm install && node server.js",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
     "start:dev": "cd bild-it-profiles && cd bild-it-profiles-backend && nodemon server.js",
-    "heroku-postbuild": "echo Later..."
+    "server": "cd bild-it-profiles && cd bild-it-profiles-backend && npm install && node server.js",
+    "client": "cd bild-it-profiles && npm install && npm start"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/J-Mustafic/bild-it-profiles/issues"
   },
-  "homepage": "https://github.com/J-Mustafic/bild-it-profiles#readme"
+  "homepage": "https://github.com/J-Mustafic/bild-it-profiles#readme",
+  "dependencies": {
+    "concurrently": "^4.1.2"
+  }
 }
