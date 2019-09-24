@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd bild-it-profiles\\bild-it-profiles-backend && npm install && cd .. && npm install && nodemon bild-it-profiles\\bild-it-profiles-backend\\server.js"
+    "start": "cd bild-it-profiles && cd bild-it-profiles-backend && npm install && nodemon server.js"
   },
   "repository": {
     "type": "git",
