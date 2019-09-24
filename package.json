@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cd bild-it-profiles && cd bild-it-profiles-backend && npm install && node server.js",
+    "start:dev": "cd bild-it-profiles && cd bild-it-profiles-backend && nodemon server.js",
     "heroku-postbuild": "echo Later..."
   },
   "repository": {
