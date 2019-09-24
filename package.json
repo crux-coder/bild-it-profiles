@@ -1,0 +1,19 @@
+{
+  "name": "bild-it-profiles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon bild-it-profiles\\bild-it-profiles-backend\\server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/J-Mustafic/bild-it-profiles.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/J-Mustafic/bild-it-profiles/issues"
+  },
+  "homepage": "https://github.com/J-Mustafic/bild-it-profiles#readme"
+}
