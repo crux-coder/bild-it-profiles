@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run server",
-    "heroku-postbuild": "cd bild-it-profiles && npm install && npm install && npm run build",
+    "heroku-postbuild": "cd client && npm install && npm install && npm run build",
     "start:dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd bild-it-profiles && cd bild-it-profiles-backend && npm install && node server.js",
-    "client": "cd bild-it-profiles && npm install && npm start"
+    "server": "cd bild-it-profiles && npm install && node server.js",
+    "client": "cd bild-it-profiles && cd client && npm install && npm start"
   },
   "repository": {
     "type": "git",
