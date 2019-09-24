@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
