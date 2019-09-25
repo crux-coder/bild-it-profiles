@@ -7,41 +7,18 @@ export default class CreateExercise extends Component {
     constructor(props) {
         super(props);
 
-        this.onChangeUsername = this.onChangeUsername.bind(this);
+        this.state = {
+            description: '',
+            duration: 0,
+            date: new Date(),
+            selectedUser: props.user._id,
+            user: props.user
+        }
+
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-
-        this.state = {
-            username: '',
-            description: '',
-            duration: 0,
-            date: new Date(),
-            users: []
-        }
-    }
-
-    componentDidMount() {
-        axios.get('/users/')
-            .then(response => {
-                if (response.data.length > 0) {
-                    this.setState({
-                        users: response.data.map(user => user.username),
-                        username: response.data[0].username
-                    })
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
-    }
-
-    onChangeUsername(e) {
-        this.setState({
-            username: e.target.value
-        })
     }
 
     onChangeDescription(e) {
@@ -66,18 +43,20 @@ export default class CreateExercise extends Component {
         e.preventDefault();
 
         const exercise = {
-            username: this.state.username,
+            user: this.state.selectedUser,
             description: this.state.description,
             duration: this.state.duration,
             date: this.state.date
         }
 
-        console.log(exercise);
-
-        axios.post('/exercises/add', exercise)
-            .then(res => console.log(res.data));
-
-        window.location = '/';
+        axios.post('/exercises', exercise)
+            .then(res => {
+                this.props.history.push('/home');
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     render() {
@@ -86,21 +65,7 @@ export default class CreateExercise extends Component {
                 <h3>Create New Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                        <label>Username: </label>
-                        <select ref="userInput"
-                            required
-                            className="form-control"
-                            value={this.state.username}
-                            onChange={this.onChangeUsername}>
-                            {
-                                this.state.users.map(function (user) {
-                                    return <option
-                                        key={user}
-                                        value={user}>{user}
-                                    </option>;
-                                })
-                            }
-                        </select>
+                        <label>User: {this.state.user.fullName}</label>
                     </div>
                     <div className="form-group">
                         <label>Description: </label>

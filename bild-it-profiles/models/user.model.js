@@ -2,18 +2,29 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: 3
-    }
+const UserSchema = new Schema({
+    email: { type: String, required: true, unique: true, trim: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    password: { type: String, required: true },
+    dob: { type: Date, required: true }
 }, {
-    timestamps: true
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true },
+        timestamps: true,
+    });
+
+UserSchema.virtual('exercises', {
+    ref: 'Exercise',
+    localField: '_id',
+    foreignField: 'user'
 });
 
-const User = mongoose.model('User', userSchema);
+UserSchema.virtual('fullName')
+    .get(function () {
+        return this.firstName + ' ' + this.lastName;
+    });
+
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
