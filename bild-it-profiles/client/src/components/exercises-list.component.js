@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const Exercise = props => (
     <tr>
-        <td>{props.exercise.username}</td>
+        <td><Link to={"/user/" + props.exercise.user._id}>{props.exercise.user.username}</Link></td>
         <td>{props.exercise.description}</td>
         <td>{props.exercise.duration}</td>
         <td>{props.exercise.date.substring(0, 10)}</td>
@@ -27,6 +27,7 @@ export default class ExercisesList extends Component {
         axios.get('/exercises/')
             .then(response => {
                 this.setState({ exercises: response.data })
+                console.log(response.data);
             })
             .catch((error) => {
                 console.log(error);

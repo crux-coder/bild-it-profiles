@@ -3,19 +3,20 @@ const Exercise = require('../models/exercise.model');
 
 router.route('/').get((req, res) => {
     Exercise.find()
+        .populate('user')
         .then(exercises => res.json(exercises))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
 
 router.route('/').post((req, res) => {
-    const username = req.body.username;
+    const user = req.body.user;
     const description = req.body.description;
     const duration = Number(req.body.duration);
     const date = Date.parse(req.body.date);
 
     const newExercise = new Exercise({
-        username,
+        user,
         description,
         duration,
         date
@@ -23,11 +24,15 @@ router.route('/').post((req, res) => {
 
     newExercise.save()
         .then(() => res.json('Exercise added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch(err => {
+            console.log(err);
+            res.status(400).json('Error: ' + err)
+        });
 });
 
 router.route('/:id').get((req, res) => {
     Exercise.findById(req.params.id)
+        .populate('user')
         .then(exercise => res.json(exercise))
         .catch(err => res.status(400).json('Error: ' + err));
 });
