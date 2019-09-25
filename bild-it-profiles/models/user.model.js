@@ -6,7 +6,7 @@ const userSchema = new Schema({
     username: { type: String, required: true, unique: true, trim: true, minlength: 3 },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
-    dateOfBirth: { type: Date, required: true }
+    dob: { type: Date, required: true }
 }, {
         timestamps: true
     });
