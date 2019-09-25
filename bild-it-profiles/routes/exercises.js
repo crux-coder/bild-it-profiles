@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Exercise = require('../models/exercise.model');
+const User = require('../models/user.model');
 
 router.route('/').get((req, res) => {
     Exercise.find()
@@ -28,6 +29,12 @@ router.route('/').post((req, res) => {
             console.log(err);
             res.status(400).json('Error: ' + err)
         });
+
+    User.findById(user)
+        .then(user => {
+            user.exercises.push(newExercise._id);
+            user.save();
+        })
 });
 
 router.route('/:id').get((req, res) => {

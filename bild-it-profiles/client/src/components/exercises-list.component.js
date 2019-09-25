@@ -1,18 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import Exercise from './exercise.component';
 import axios from 'axios';
-
-const Exercise = props => (
-    <tr>
-        <td><Link to={"/user/" + props.exercise.user._id}>{props.exercise.user.username}</Link></td>
-        <td>{props.exercise.description}</td>
-        <td>{props.exercise.duration}</td>
-        <td>{props.exercise.date.substring(0, 10)}</td>
-        <td>
-            <Link to={"/edit/" + props.exercise._id}>edit</Link> | <a href="#" onClick={() => { props.deleteExercise(props.exercise._id) }}>delete</a>
-        </td>
-    </tr>
-)
 
 export default class ExercisesList extends Component {
     constructor(props) {
@@ -56,7 +44,7 @@ export default class ExercisesList extends Component {
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
-                            <th>Username</th>
+                            <th>User</th>
                             <th>Description</th>
                             <th>Duration</th>
                             <th>Date</th>
