@@ -65,7 +65,7 @@ export default class CreateExercise extends Component {
                 <h3>Create New Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                        <label>User: {this.props.fullName}</label>
+                        <label>User: {this.state.user.fullName}</label>
                     </div>
                     <div className="form-group">
                         <label>Description: </label>
