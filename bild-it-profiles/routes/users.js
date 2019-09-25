@@ -16,17 +16,25 @@ router.route('/:id').get((req, res) => {
 
 
 router.route('/').post((req, res) => {
-    const username = req.body.username;
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const dob = Date.parse(req.body.dob);
-
-    const newUser = new User({ username, firstName, lastName, dob });
+    const { email, password, firstName, lastName, dob } = req.body;
+    const newUser = new User({ email, password, firstName, lastName, dob });
 
     newUser.save()
         .then(() => res.json('User added!'))
         .catch(err => {
+            console.log(err)
             res.status(400).json('Error: ' + err)
+        });
+});
+
+router.route('/login').post((req, res) => {
+    const { email, password } = req.body;
+    User.findOne({ email })
+        .then(user => {
+            if (user.email === email && user.password == password)
+                res.json(user);
+            else
+                res.status(403).json('Wrong username or password.')
         });
 });
 

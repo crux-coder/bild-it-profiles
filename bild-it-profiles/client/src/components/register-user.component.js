@@ -8,9 +8,10 @@ export default class CreateUser extends Component {
         super(props);
 
         this.state = {
-            username: '',
+            email: '',
             firstName: '',
             lastName: '',
+            password: '',
             dob: null,
         }
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -37,19 +38,27 @@ export default class CreateUser extends Component {
         e.preventDefault();
 
         const user = {
-            username: this.state.username,
+            email: this.state.email,
             firstName: this.state.firstName,
             lastName: this.state.lastName,
+            password: this.state.password,
             dob: this.state.dob,
         }
 
         axios.post('/users', user)
-            .then(res => console.log(res.data));
+            .then(res => {
+                if (res.status === 200)
+                    window.location = '/';
+                else
+                    console.log(res)
+
+            });
 
         this.setState({
-            username: '',
+            email: '',
             firstName: '',
             lastName: '',
+            password: '',
             dob: null,
         })
     }
@@ -60,12 +69,12 @@ export default class CreateUser extends Component {
                 <h3>Create New User</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                        <label>Username: </label>
-                        <input type="text"
+                        <label>E-mail: </label>
+                        <input type="email"
                             required
-                            name="username"
+                            name="email"
                             className="form-control"
-                            value={this.state.username}
+                            value={this.state.email}
                             onChange={this.handleInputChange}
                         />
                         <label>First name: </label>
@@ -84,7 +93,15 @@ export default class CreateUser extends Component {
                             value={this.state.lastName}
                             onChange={this.handleInputChange}
                         />
-                        <label>Date: </label>
+                        <label>Password: </label>
+                        <input type="password"
+                            required
+                            name="password"
+                            className="form-control"
+                            value={this.state.password}
+                            onChange={this.handleInputChange}
+                        />
+                        <label>Birth date: </label>
                         <div>
                             <DatePicker
                                 placeholderText="Select a date of birth."
@@ -100,7 +117,7 @@ export default class CreateUser extends Component {
                         </div>
                     </div>
                     <div className="form-group">
-                        <input type="submit" value="Create User" className="btn btn-primary" />
+                        <input type="submit" value="Register" className="btn btn-success" />
                     </div>
                 </form>
             </div>
