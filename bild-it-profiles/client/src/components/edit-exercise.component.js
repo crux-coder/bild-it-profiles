@@ -7,14 +7,14 @@ export default class EditExercise extends Component {
     constructor(props) {
         super(props);
 
-        this.onChangeUsername = this.onChangeUsername.bind(this);
+        this.onChangeUser = this.onChangeUser.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            username: '',
+            selectedUser: '',
             description: '',
             duration: 0,
             date: new Date(),
@@ -23,10 +23,10 @@ export default class EditExercise extends Component {
     }
 
     componentDidMount() {
-        axios.get('/exercises/' + this.props.match.params.id)
+        axios.get(`/exercises/${this.props.match.params.id}`)
             .then(response => {
                 this.setState({
-                    username: response.data.username,
+                    selectedUser: response.data.user._id,
                     description: response.data.description,
                     duration: response.data.duration,
                     date: new Date(response.data.date)
@@ -36,11 +36,11 @@ export default class EditExercise extends Component {
                 console.log(error);
             })
 
-        axios.get('/users/')
+        axios.get('/users')
             .then(response => {
                 if (response.data.length > 0) {
                     this.setState({
-                        users: response.data.map(user => user.username),
+                        users: response.data.map(user => user),
                     })
                 }
             })
@@ -50,9 +50,9 @@ export default class EditExercise extends Component {
 
     }
 
-    onChangeUsername(e) {
+    onChangeUser(e) {
         this.setState({
-            username: e.target.value
+            selectedUser: e.target.value
         })
     }
 
@@ -78,7 +78,7 @@ export default class EditExercise extends Component {
         e.preventDefault();
 
         const exercise = {
-            username: this.state.username,
+            user: this.state.selectedUser,
             description: this.state.description,
             duration: this.state.duration,
             date: this.state.date
@@ -96,17 +96,17 @@ export default class EditExercise extends Component {
                 <h3>Edit Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                        <label>Username: </label>
+                        <label>User: </label>
                         <select ref="userInput"
                             required
                             className="form-control"
-                            value={this.state.username}
-                            onChange={this.onChangeUsername}>
+                            value={this.state.selectedUser}
+                            onChange={this.onChangeUser}>
                             {
                                 this.state.users.map(function (user) {
                                     return <option
-                                        key={user}
-                                        value={user}>{user}
+                                        key={user._id}
+                                        value={user._id}>{user.username}
                                     </option>;
                                 })
                             }

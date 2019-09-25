@@ -16,7 +16,8 @@ app.use(express.json());
 
 const uri = process.env.ATLAS_URI;
 
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(uri, { useNewUrlParser: true })
+    .catch(error => console.log(error));
 
 const connection = mongoose.connection;
 

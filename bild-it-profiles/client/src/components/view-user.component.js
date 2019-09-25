@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import Exercise from './exercise.component';
 import axios from 'axios';
+import Exercise from './exercise.component';
+import "react-datepicker/dist/react-datepicker.css";
 
-export default class ExercisesList extends Component {
+export default class ViewUser extends Component {
     constructor(props) {
         super(props);
 
-        this.deleteExercise = this.deleteExercise.bind(this)
-
-        this.state = { user: props.user };
+        this.state = {
+            user: props.user
+        }
+        this.deleteExercise = this.deleteExercise.bind(this);
     }
 
     componentDidMount() {
-        axios.get(`/users/${this.state.user._id}`)
+        axios.get(`/users/${this.props.match.params.id}`)
             .then(response => {
                 this.setState({
                     user: response.data
@@ -28,8 +30,11 @@ export default class ExercisesList extends Component {
         axios.delete('/exercises/' + id)
             .then(response => { console.log(response.data) });
 
+        const exercises = this.state.user.exercises.filter(el => el._id !== id)
+        const user = this.state.user;
+        user.exercises = exercises;
         this.setState({
-            exercises: this.state.exercises.filter(el => el._id !== id)
+            user: user
         })
     }
 
@@ -44,7 +49,12 @@ export default class ExercisesList extends Component {
     render() {
         return (
             <div>
-                <h3>Logged Exercises</h3>
+                <h3>User Page</h3>
+                <hr />
+                <h4>{this.state.user ? this.state.user.fullName : ''}</h4>
+                <h4>{this.state.user ? this.state.user.email : ''}</h4>
+                <h4>{this.state.user ? this.state.user.dob : ''}</h4>
+                <hr />
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
