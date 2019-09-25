@@ -8,7 +8,7 @@ export default class ViewUser extends Component {
         super(props);
 
         this.state = {
-            user: null
+            user: props.user
         }
         this.deleteExercise = this.deleteExercise.bind(this);
     }
@@ -39,10 +39,11 @@ export default class ViewUser extends Component {
     }
 
     exerciseList() {
+        console.log(this.state.user)
         if (this.state.user)
-            return this.state.user.exercises.map(currentexercise => {
+            return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
                 return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
-            })
+            }) : '';
     }
 
     render() {
@@ -50,9 +51,8 @@ export default class ViewUser extends Component {
             <div>
                 <h3>User Page</h3>
                 <hr />
-                <h4>{this.state.user ? this.state.user.username : ''}</h4>
-                <h4>{this.state.user ? this.state.user.firstName : ''}</h4>
-                <h4>{this.state.user ? this.state.user.lastName : ''}</h4>
+                <h4>{this.state.user ? this.state.user.fullName : ''}</h4>
+                <h4>{this.state.user ? this.state.user.email : ''}</h4>
                 <h4>{this.state.user ? this.state.user.dob : ''}</h4>
                 <hr />
                 <table className="table">
@@ -66,7 +66,7 @@ export default class ViewUser extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.exerciseList()}
+                        {this.exerciseList() || <tr><td>No entries.</td></tr>}
                     </tbody>
                 </table>
             </div>

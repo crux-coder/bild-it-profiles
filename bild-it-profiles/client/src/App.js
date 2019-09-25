@@ -55,25 +55,20 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <Router>
         {this.state.loggedIn && <Redirect to={{ pathname: '/home' }} />}
         <div className="container-flex">
-          {this.state.loggedIn && <Navbar logout={this.logout} />}
+          {this.state.loggedIn && <Navbar user={this.state.user} logout={this.logout} />}
           <br />
           <div className="container-fluid">
             <Switch>
-              <Route
-                exact
-                path='/'
-                render={(props) => <Login {...props} onSubmit={this.onSubmit} />}
-              />
-              <PrivateRoute user={this.state.user} loggedIn={this.state.loggedIn} path="/home" exact component={ExercisesList} />
-              <PrivateRoute user={this.state.user} loggedIn={this.state.loggedIn} path="/edit/:id" exact component={EditExercise} />
-              <PrivateRoute user={this.state.user} loggedIn={this.state.loggedIn} path="/create" exact component={CreateExercise} />
-              <PrivateRoute user={this.state.user} loggedIn={this.state.loggedIn} path="/user/register" exact component={RegisterUser} />
-              <PrivateRoute user={this.state.user} loggedIn={this.state.loggedIn} path="/user/:id" exact component={ViewUser} />
+              <Route exact path='/' render={(props) => <Login {...props} onSubmit={this.onSubmit} />} />
+              <PrivateRoute exact path="/home" user={this.state.user} loggedIn={this.state.loggedIn} component={ExercisesList} />
+              <PrivateRoute exact path="/edit/:id" user={this.state.user} loggedIn={this.state.loggedIn} component={EditExercise} />
+              <PrivateRoute exact path="/create" user={this.state.user} loggedIn={this.state.loggedIn} component={CreateExercise} />
+              <PrivateRoute exact path="/user/register" user={this.state.user} loggedIn={this.state.loggedIn} component={RegisterUser} />
+              <PrivateRoute exact path="/user/:id" user={this.state.user} loggedIn={this.state.loggedIn} component={ViewUser} />
             </Switch>
           </div>
         </div>

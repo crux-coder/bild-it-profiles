@@ -7,42 +7,18 @@ export default class CreateExercise extends Component {
     constructor(props) {
         super(props);
 
-
         this.state = {
             description: '',
             duration: 0,
             date: new Date(),
-            users: [],
-            selectedUser: ''
+            selectedUser: props.user._id,
+            user: props.user
         }
 
-        this.onChangeUser = this.onChangeUser.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    componentDidMount() {
-        axios.get('/users/')
-            .then(response => {
-                if (response.data.length > 0) {
-                    this.setState({
-                        users: response.data.map(user => user),
-                        selectedUser: response.data[0]._id
-                    })
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
-    }
-
-    onChangeUser(e) {
-        this.setState({
-            selectedUser: e.target.value
-        })
     }
 
     onChangeDescription(e) {
@@ -75,7 +51,7 @@ export default class CreateExercise extends Component {
 
         axios.post('/exercises', exercise)
             .then(res => {
-                window.location = '/';
+                this.props.history.push('/home');
                 console.log(res.data);
             })
             .catch(err => {
@@ -89,20 +65,7 @@ export default class CreateExercise extends Component {
                 <h3>Create New Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                        <label>User: </label>
-                        <select ref="userInput"
-                            required
-                            className="form-control"
-                            onChange={this.onChangeUser}>
-                            {
-                                this.state.users.map(function (user) {
-                                    return <option
-                                        key={user._id}
-                                        value={user._id}>{user.username}
-                                    </option>;
-                                })
-                            }
-                        </select>
+                        <label>User: {this.props.fullName}</label>
                     </div>
                     <div className="form-group">
                         <label>Description: </label>

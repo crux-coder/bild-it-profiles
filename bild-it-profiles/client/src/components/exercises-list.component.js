@@ -8,17 +8,20 @@ export default class ExercisesList extends Component {
 
         this.deleteExercise = this.deleteExercise.bind(this)
 
-        this.state = { exercises: [] };
+        this.state = { user: props.user };
     }
 
     componentDidMount() {
-        axios.get('/exercises/')
+        axios.get(`/users/${this.state.user._id}`)
             .then(response => {
-                this.setState({ exercises: response.data })
+                this.setState({
+                    user: response.data
+                })
             })
             .catch((error) => {
                 console.log(error);
             })
+
     }
 
     deleteExercise(id) {
@@ -31,9 +34,11 @@ export default class ExercisesList extends Component {
     }
 
     exerciseList() {
-        return this.state.exercises.map(currentexercise => {
-            return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
-        })
+        console.log(this.state.user)
+        if (this.state.user)
+            return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
+                return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+            }) : '';
     }
 
     render() {
@@ -51,7 +56,7 @@ export default class ExercisesList extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.exerciseList()}
+                        {this.exerciseList() || <tr><td>No entries.</td></tr>}
                     </tbody>
                 </table>
             </div>

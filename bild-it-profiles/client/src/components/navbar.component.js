@@ -15,14 +15,14 @@ export default class Navbar extends Component {
                         <li className="navbar-item">
                             <Link to="/create" className="nav-link">Create Exercise Log</Link>
                         </li>
-                        <li className="navbar-item">
+                        {/* <li className="navbar-item">
                             <Link to="/user/register" className="nav-link">Register User</Link>
+                        </li> */}
+                        <li className="navbar-item">
+                            <Link to={`/user/${this.props.user._id}`} className="nav-link">Profile</Link>
                         </li>
                         <li className="navbar-item">
-                            <Link to="/user/login" className="nav-link">Login</Link>
-                        </li>
-                        <li className="navbar-item">
-                            <Link onClick={this.props.logout} className="nav-link">Logout</Link>
+                            <Link to="#" onClick={this.props.logout} className="nav-link">Logout</Link>
                         </li>
                     </ul>
                 </div>
