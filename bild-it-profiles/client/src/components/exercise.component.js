@@ -7,7 +7,6 @@ export default class Exercise extends Component {
         const props = this.props;
         return (
             <tr>
-                <td><Link to={"/user/" + props.exercise.user._id}>{props.exercise.user.username}</Link></td>
                 <td>{props.exercise.description}</td>
                 <td>{props.exercise.duration}</td>
                 <td>{props.exercise.date.substring(0, 10)}</td>
