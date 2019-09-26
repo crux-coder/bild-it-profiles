@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const Exercise = require('../models/exercise.model');
 const User = require('../models/user.model');
+const auth = require('../security/token.utils');
 
-router.route('/').get((req, res) => {
+router.route('/').get(auth, (req, res) => {
     Exercise.find()
         .populate('user')
         .then(exercises => res.json(exercises))
@@ -10,7 +11,7 @@ router.route('/').get((req, res) => {
 });
 
 
-router.route('/').post((req, res) => {
+router.route('/').post(auth, (req, res) => {
     const user = req.body.user;
     const description = req.body.description;
     const duration = Number(req.body.duration);
@@ -31,26 +32,27 @@ router.route('/').post((req, res) => {
         });
 
     User.findById(user)
+        .populate('exercises')
         .then(user => {
             user.exercises.push(newExercise._id);
             user.save();
         })
 });
 
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, (req, res) => {
     Exercise.findById(req.params.id)
         .populate('user')
         .then(exercise => res.json(exercise))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').delete((req, res) => {
+router.route('/:id').delete(auth, (req, res) => {
     Exercise.findByIdAndDelete(req.params.id)
         .then(() => res.json('Exercise deleted!'))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, (req, res) => {
     Exercise.findById(req.params.id)
         .then(exercise => {
             exercise.user = req.body.user;

@@ -15,12 +15,12 @@ export default class Navbar extends Component {
                         <li className="navbar-item">
                             <Link to="/create" className="nav-link">Create Exercise Log</Link>
                         </li>
-                        {/* <li className="navbar-item">
-                            <Link to="/user/register" className="nav-link">Register User</Link>
-                        </li> */}
                         <li className="navbar-item">
-                            <Link to={`/user/${this.props.user._id}`} className="nav-link">Profile</Link>
+                            <Link to="/user/register" className="nav-link">Register User</Link>
                         </li>
+                        {this.props.user && <li className="navbar-item">
+                            <Link to={`/user/${this.props.user._id}`} className="nav-link">Profile</Link>
+                        </li>}
                         <li className="navbar-item">
                             <Link to="#" onClick={this.props.logout} className="nav-link">Logout</Link>
                         </li>

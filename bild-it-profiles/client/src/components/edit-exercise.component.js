@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import Alert from 'react-s-alert';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class EditExercise extends Component {
     constructor(props) {
         super(props);
-
-        this.onChangeUser = this.onChangeUser.bind(this);
-        this.onChangeDescription = this.onChangeDescription.bind(this);
-        this.onChangeDuration = this.onChangeDuration.bind(this);
-        this.onChangeDate = this.onChangeDate.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-
         this.state = {
             selectedUser: '',
             description: '',
@@ -20,31 +16,26 @@ export default class EditExercise extends Component {
             date: new Date(),
             users: []
         }
+
+        this.Auth = new AuthService();
+        this.onChangeUser = this.onChangeUser.bind(this);
+        this.onChangeDescription = this.onChangeDescription.bind(this);
+        this.onChangeDuration = this.onChangeDuration.bind(this);
+        this.onChangeDate = this.onChangeDate.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentDidMount() {
-        axios.get(`/exercises/${this.props.match.params.id}`)
-            .then(response => {
+        this.Auth.fetch(`/exercises/${this.props.match.params.id}`, { method: 'GET' })
+            .then(res => {
                 this.setState({
-                    selectedUser: response.data.user._id,
-                    description: response.data.description,
-                    duration: response.data.duration,
-                    date: new Date(response.data.date)
+                    selectedUser: res.data.user._id,
+                    description: res.data.description,
+                    duration: res.data.duration,
+                    date: new Date(res.data.date)
                 })
             })
             .catch(function (error) {
-                console.log(error);
-            })
-
-        axios.get('/users')
-            .then(response => {
-                if (response.data.length > 0) {
-                    this.setState({
-                        users: response.data.map(user => user),
-                    })
-                }
-            })
-            .catch((error) => {
                 console.log(error);
             })
 
@@ -84,10 +75,11 @@ export default class EditExercise extends Component {
             date: this.state.date
         }
 
-        axios.post('/exercises/update/' + this.props.match.params.id, exercise)
-            .then(res => console.log(res.data));
-
-        window.location = '/';
+        this.Auth.fetch(`/exercises/update/${this.props.match.params.id}`, { method: 'POST', data: JSON.stringify(exercise) })
+            .then(() => {
+                Alert.success('Exercise succesfully updated.');
+                this.props.history.push('/home');
+            }).catch(err => console.log(err));
     }
 
     render() {
@@ -95,23 +87,6 @@ export default class EditExercise extends Component {
             <div>
                 <h3>Edit Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>User: </label>
-                        <select ref="userInput"
-                            required
-                            className="form-control"
-                            value={this.state.selectedUser}
-                            onChange={this.onChangeUser}>
-                            {
-                                this.state.users.map(function (user) {
-                                    return <option
-                                        key={user._id}
-                                        value={user._id}>{user.username}
-                                    </option>;
-                                })
-                            }
-                        </select>
-                    </div>
                     <div className="form-group">
                         <label>Description: </label>
                         <input type="text"
