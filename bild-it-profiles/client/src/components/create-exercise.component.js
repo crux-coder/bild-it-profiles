@@ -4,7 +4,7 @@ import Alert from 'react-s-alert';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { apiPostRequest } from '../utils/api-utils/api-util';
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class CreateExercise extends Component {
     constructor(props) {
@@ -18,6 +18,7 @@ export default class CreateExercise extends Component {
             user: props.user
         }
 
+        this.Auth = new AuthService();
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
@@ -52,12 +53,13 @@ export default class CreateExercise extends Component {
             date: this.state.date
         }
 
-        apiPostRequest('/exercises', exercise)
-            .then(res => {
-                if (res.status === 200) {
-                    Alert.success('Exercise successfully created.');
-                    this.props.history.push('/home');
-                }
+        this.Auth.fetch('/exercises', {
+            method: 'POST',
+            data: JSON.stringify(exercise)
+        })
+            .then(() => {
+                Alert.success('Exercise successfully created.');
+                this.props.history.push('/home');
             }).catch(err => {
                 console.log(err);
             })

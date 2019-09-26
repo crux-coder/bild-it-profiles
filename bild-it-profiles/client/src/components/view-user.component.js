@@ -4,7 +4,7 @@ import Alert from 'react-s-alert';
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import { apiGetRequest, apiDeleteRequest } from '../utils/api-utils/api-util';
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class ViewUser extends Component {
     constructor(props) {
@@ -13,11 +13,15 @@ export default class ViewUser extends Component {
         this.state = {
             user: props.user
         }
+
+        this.Auth = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this);
     }
 
     componentDidMount() {
-        apiGetRequest(`/users/${this.props.match.params.id}`)
+        this.Auth.fetch(`/users/${this.props.match.params.id}`, {
+            method: 'GET'
+        })
             .then(res => {
                 if (res.status === 200)
                     this.setState({
@@ -31,7 +35,9 @@ export default class ViewUser extends Component {
     }
 
     deleteExercise(id) {
-        apiDeleteRequest(`/exercises/${id}`)
+        this.Auth.fetch(`/exercises/${id}`, {
+            method: 'DELETE'
+        })
             .then(res => {
                 if (res.status === 200)
                     Alert.success('Exercise successfully deleted.');

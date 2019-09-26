@@ -2,19 +2,22 @@ import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
 
-import { apiGetRequest, apiDeleteRequest } from '../utils/api-utils/api-util';
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class ExercisesList extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            user: props.user
+        };
 
+        this.Auth = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this)
-
-        this.state = { user: props.user };
     }
 
     componentDidMount() {
-        apiGetRequest(`/users/${this.state.user._id}`)
+        const user = this.Auth.getProfile();
+        this.Auth.fetch(`/users/${user._id}`, { method: 'GET' })
             .then(res => {
                 this.setState({
                     user: res.data,
@@ -28,10 +31,9 @@ export default class ExercisesList extends Component {
     }
 
     deleteExercise(id) {
-        apiDeleteRequest('/exercises/' + id)
-            .then(res => {
-                if (res.status === 200)
-                    Alert.success('Exercise successfully deleted.');
+        this.Auth.fetch('/exercises/' + id, { method: 'DELETE' })
+            .then(() => {
+                Alert.success('Exercise successfully deleted.');
             });
 
         this.setState({
@@ -40,10 +42,11 @@ export default class ExercisesList extends Component {
     }
 
     exerciseList() {
-        if (this.state.user)
+        if (this.state.user) {
             return this.state.exercises ? this.state.exercises.map(currentexercise => {
                 return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
             }) : '';
+        }
     }
 
     render() {

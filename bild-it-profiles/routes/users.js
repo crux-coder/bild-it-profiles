@@ -36,14 +36,15 @@ router.route('/').post(auth, (req, res) => {
 router.route('/login').post((req, res) => {
     const { email, password } = req.body;
     User.findOne({ email })
+        .populate('exercises')
         .then(user => {
             if (user.email === email) {
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (result) {
-                        let token = jwt.sign({ email: email },
+                        let token = jwt.sign(user.toObject(),
                             config.secret,
                             {
-                                expiresIn: '3h'
+                                expiresIn: '1d'
                             });
                         res.json({ user, token });
                     }

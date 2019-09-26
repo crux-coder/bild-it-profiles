@@ -18,9 +18,9 @@ export default class Navbar extends Component {
                         <li className="navbar-item">
                             <Link to="/user/register" className="nav-link">Register User</Link>
                         </li>
-                        <li className="navbar-item">
+                        {this.props.user && <li className="navbar-item">
                             <Link to={`/user/${this.props.user._id}`} className="nav-link">Profile</Link>
-                        </li>
+                        </li>}
                         <li className="navbar-item">
                             <Link to="#" onClick={this.props.logout} className="nav-link">Logout</Link>
                         </li>

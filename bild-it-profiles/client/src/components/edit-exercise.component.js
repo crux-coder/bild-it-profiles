@@ -4,18 +4,11 @@ import Alert from 'react-s-alert';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { apiGetRequest, apiPostRequest } from '../utils/api-utils/api-util';
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class EditExercise extends Component {
     constructor(props) {
         super(props);
-
-        this.onChangeUser = this.onChangeUser.bind(this);
-        this.onChangeDescription = this.onChangeDescription.bind(this);
-        this.onChangeDuration = this.onChangeDuration.bind(this);
-        this.onChangeDate = this.onChangeDate.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-
         this.state = {
             selectedUser: '',
             description: '',
@@ -23,10 +16,17 @@ export default class EditExercise extends Component {
             date: new Date(),
             users: []
         }
+
+        this.Auth = new AuthService();
+        this.onChangeUser = this.onChangeUser.bind(this);
+        this.onChangeDescription = this.onChangeDescription.bind(this);
+        this.onChangeDuration = this.onChangeDuration.bind(this);
+        this.onChangeDate = this.onChangeDate.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentDidMount() {
-        apiGetRequest(`/exercises/${this.props.match.params.id}`)
+        this.Auth.fetch(`/exercises/${this.props.match.params.id}`, { method: 'GET' })
             .then(res => {
                 this.setState({
                     selectedUser: res.data.user._id,
@@ -36,18 +36,6 @@ export default class EditExercise extends Component {
                 })
             })
             .catch(function (error) {
-                console.log(error);
-            })
-
-        apiGetRequest('/users')
-            .then(res => {
-                if (res.data.length > 0) {
-                    this.setState({
-                        users: res.data.map(user => user),
-                    })
-                }
-            })
-            .catch((error) => {
                 console.log(error);
             })
 
@@ -87,12 +75,10 @@ export default class EditExercise extends Component {
             date: this.state.date
         }
 
-        apiPostRequest(`/exercises/update/${this.props.match.params.id}`, exercise)
-            .then(res => {
-                if (res.status === 200) {
-                    Alert.success('Exercise succesfully updated.');
-                    this.props.history.push('/home');
-                }
+        this.Auth.fetch(`/exercises/update/${this.props.match.params.id}`, { method: 'POST', data: JSON.stringify(exercise) })
+            .then(() => {
+                Alert.success('Exercise succesfully updated.');
+                this.props.history.push('/home');
             }).catch(err => console.log(err));
     }
 

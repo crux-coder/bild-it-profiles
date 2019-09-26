@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { apiPostRequest } from './utils/api-utils/api-util';
+import AuthService from './utils/auth-utils/auth-service';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-s-alert/dist/s-alert-default.css';
@@ -25,32 +25,35 @@ class App extends Component {
       loggedIn: false
     }
 
+    this.Auth = new AuthService();
+
     this.onSubmit = this.onSubmit.bind(this);
     this.logout = this.logout.bind(this);
   }
 
-  onSubmit(email, password) {
-
-    const user = {
-      email: email,
-      password: password
+  componentDidMount() {
+    if (this.Auth.loggedIn()) {
+      this.setState({
+        user: this.Auth.getProfile(),
+        loggedIn: true
+      })
     }
+  }
 
-    apiPostRequest('/users/login', user)
+  onSubmit(email, password) {
+    this.Auth.login(email, password)
       .then(res => {
-        if (res.status === 200) {
-          this.setState({
-            user: res.data.user,
-            loggedIn: true
-          });
-          Alert.success('Logged in successfully.');
-          localStorage.setItem('accessToken', res.data.token);
-        }
+        this.setState({
+          user: res.data.user,
+          loggedIn: true
+        });
+        Alert.success('Logged in successfully.');
       }).catch(err => console.log(err));
   }
 
   logout(e) {
     e.preventDefault();
+    this.Auth.logout();
     this.setState({
       user: null,
       loggedIn: false
@@ -62,7 +65,7 @@ class App extends Component {
     return (
       <Router>
         {this.state.loggedIn && <Redirect to={{ pathname: '/home' }} />}
-        <div className="container-flex">
+        <div className="container-flex" >
           {this.state.loggedIn && <Navbar user={this.state.user} logout={this.logout} />}
           <br />
           <div className="container-fluid">
