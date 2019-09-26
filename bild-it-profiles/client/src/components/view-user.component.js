@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
+import { formatDate } from '../utils/date-formatter';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -65,7 +66,7 @@ export default class ViewUser extends Component {
                 <hr />
                 <h4>{this.state.user ? this.state.user.fullName : ''}</h4>
                 <h4>{this.state.user ? this.state.user.email : ''}</h4>
-                <h4>{this.state.user ? this.state.user.dob : ''}</h4>
+                <h4>{this.state.user ? formatDate(this.state.user.dob) : ''}</h4>
                 <hr />
                 <table className="table">
                     <thead className="thead-light">

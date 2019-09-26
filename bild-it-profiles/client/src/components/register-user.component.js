@@ -111,7 +111,7 @@ export default class CreateUser extends Component {
                                 showMonthDropdown
                                 showYearDropdown
                                 dropdownMode="select"
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd.MM.yyyy"
                                 selected={this.state.dob}
                                 onChange={this.onChangeDate}
                                 maxDate={new Date()}

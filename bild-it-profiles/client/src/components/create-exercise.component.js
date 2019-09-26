@@ -97,7 +97,7 @@ export default class CreateExercise extends Component {
                             <DatePicker
                                 selected={this.state.date}
                                 onChange={this.onChangeDate}
-                                dateFormat="dd/MM/yyyy"
+                                dateFormat="dd.MM.yyyy"
                                 maxDate={new Date()}
                             />
                         </div>

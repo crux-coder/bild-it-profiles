@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import logo from '../images/bildit.png';
+
 export default class Navbar extends Component {
 
     render() {
         return (
             <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
-                <Link to="/home" className="navbar-brand">BILD-IT Profiles</Link>
+                <Link to="/home"><img width="50%" src={logo} alt="bildit logo" /></Link>
                 <div className="collpase navbar-collapse">
                     <ul className="navbar-nav mr-auto">
                         <li className="navbar-item">
@@ -15,9 +17,9 @@ export default class Navbar extends Component {
                         <li className="navbar-item">
                             <Link to="/create" className="nav-link">Create Exercise Log</Link>
                         </li>
-                        <li className="navbar-item">
+                        {/* <li className="navbar-item">
                             <Link to="/user/register" className="nav-link">Register User</Link>
-                        </li>
+                        </li> */}
                         {this.props.user && <li className="navbar-item">
                             <Link to={`/user/${this.props.user._id}`} className="nav-link">Profile</Link>
                         </li>}
