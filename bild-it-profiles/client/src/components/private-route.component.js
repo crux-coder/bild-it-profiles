@@ -1,10 +1,20 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
+import Alert from 'react-s-alert';
 
-const PrivateRoute = ({ component: Component, user, loggedIn, ...rest }) => (
+import AuthService from '../utils/auth-utils/auth-service';
 
-    <Route
+
+
+const Auth = new AuthService();
+
+
+const PrivateRoute = ({ component: Component, user, ...rest }) => {
+
+    const loggedIn = Auth.loggedIn();
+
+    return (<Route
         {...rest}
         render={
             props => loggedIn ? (
@@ -15,7 +25,7 @@ const PrivateRoute = ({ component: Component, user, loggedIn, ...rest }) => (
                     {...props} />)
                 : (<Redirect to={{ pathname: '/', state: { from: props.location } }} />)
         }
-    />
-);
+    />)
+};
 
 export default PrivateRoute;

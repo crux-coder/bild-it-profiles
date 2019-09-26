@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
 import Exercise from './exercise.component';
-import axios from 'axios';
+import Alert from 'react-s-alert';
+
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class ExercisesList extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            user: props.user
+        };
 
+        this.Auth = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this)
-
-        this.state = { user: props.user };
     }
 
     componentDidMount() {
-        axios.get(`/users/${this.state.user._id}`)
-            .then(response => {
+        const user = this.Auth.getProfile();
+        this.Auth.fetch(`/users/${user._id}`, { method: 'GET' })
+            .then(res => {
                 this.setState({
-                    user: response.data
+                    user: res.data,
+                    exercises: res.data.exercises
                 })
             })
             .catch((error) => {
@@ -25,8 +31,10 @@ export default class ExercisesList extends Component {
     }
 
     deleteExercise(id) {
-        axios.delete('/exercises/' + id)
-            .then(response => { console.log(response.data) });
+        this.Auth.fetch('/exercises/' + id, { method: 'DELETE' })
+            .then(() => {
+                Alert.success('Exercise successfully deleted.');
+            });
 
         this.setState({
             exercises: this.state.exercises.filter(el => el._id !== id)
@@ -34,11 +42,11 @@ export default class ExercisesList extends Component {
     }
 
     exerciseList() {
-        console.log(this.state.user)
-        if (this.state.user)
-            return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
+        if (this.state.user) {
+            return this.state.exercises ? this.state.exercises.map(currentexercise => {
                 return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
             }) : '';
+        }
     }
 
     render() {

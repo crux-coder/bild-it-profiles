@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
+import Alert from 'react-s-alert';
+
 import "react-datepicker/dist/react-datepicker.css";
+
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class CreateUser extends Component {
     constructor(props) {
@@ -14,6 +17,8 @@ export default class CreateUser extends Component {
             password: '',
             dob: null,
         }
+
+        this.Auth = new AuthService();
         this.handleInputChange = this.handleInputChange.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -45,14 +50,11 @@ export default class CreateUser extends Component {
             dob: this.state.dob,
         }
 
-        axios.post('/users', user)
+        this.Auth.fetch('/users', { method: 'POST', data: JSON.stringify(user) })
             .then(res => {
-                if (res.status === 200)
-                    window.location = '/';
-                else
-                    console.log(res)
-
-            });
+                Alert.success('User successfully registered.');
+                this.props.history.push(`/user/${res.data._id}`);
+            }).catch(err => console.log(err));
 
         this.setState({
             email: '',

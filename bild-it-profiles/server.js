@@ -28,8 +28,8 @@ connection.once('open', () => {
 const exerciseRouter = require('./routes/exercises');
 const userRouter = require('./routes/users');
 
-app.use('/exercises', exerciseRouter);
-app.use('/users', userRouter);
+app.use('/v1/api/exercises', exerciseRouter);
+app.use('/v1/api/users', userRouter);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

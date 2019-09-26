@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Exercise from './exercise.component';
+import Alert from 'react-s-alert';
+
 import "react-datepicker/dist/react-datepicker.css";
+
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class ViewUser extends Component {
     constructor(props) {
@@ -10,15 +13,20 @@ export default class ViewUser extends Component {
         this.state = {
             user: props.user
         }
+
+        this.Auth = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this);
     }
 
     componentDidMount() {
-        axios.get(`/users/${this.props.match.params.id}`)
-            .then(response => {
-                this.setState({
-                    user: response.data
-                })
+        this.Auth.fetch(`/users/${this.props.match.params.id}`, {
+            method: 'GET'
+        })
+            .then(res => {
+                if (res.status === 200)
+                    this.setState({
+                        user: res.data
+                    })
             })
             .catch((error) => {
                 console.log(error);
@@ -27,8 +35,13 @@ export default class ViewUser extends Component {
     }
 
     deleteExercise(id) {
-        axios.delete('/exercises/' + id)
-            .then(response => { console.log(response.data) });
+        this.Auth.fetch(`/exercises/${id}`, {
+            method: 'DELETE'
+        })
+            .then(res => {
+                if (res.status === 200)
+                    Alert.success('Exercise successfully deleted.');
+            });
 
         const exercises = this.state.user.exercises.filter(el => el._id !== id)
         const user = this.state.user;
@@ -39,7 +52,6 @@ export default class ViewUser extends Component {
     }
 
     exerciseList() {
-        console.log(this.state.user)
         if (this.state.user)
             return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
                 return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import Alert from 'react-s-alert';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+import AuthService from '../utils/auth-utils/auth-service';
 
 export default class CreateExercise extends Component {
     constructor(props) {
@@ -15,6 +18,7 @@ export default class CreateExercise extends Component {
             user: props.user
         }
 
+        this.Auth = new AuthService();
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeDuration = this.onChangeDuration.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
@@ -49,12 +53,14 @@ export default class CreateExercise extends Component {
             date: this.state.date
         }
 
-        axios.post('/exercises', exercise)
-            .then(res => {
+        this.Auth.fetch('/exercises', {
+            method: 'POST',
+            data: JSON.stringify(exercise)
+        })
+            .then(() => {
+                Alert.success('Exercise successfully created.');
                 this.props.history.push('/home');
-                console.log(res.data);
-            })
-            .catch(err => {
+            }).catch(err => {
                 console.log(err);
             })
     }
@@ -91,6 +97,8 @@ export default class CreateExercise extends Component {
                             <DatePicker
                                 selected={this.state.date}
                                 onChange={this.onChangeDate}
+                                dateFormat="dd/MM/yyyy"
+                                maxDate={new Date()}
                             />
                         </div>
                     </div>
