@@ -34,7 +34,6 @@ export default class ExercisesList extends Component {
     }
 
     exerciseList() {
-        console.log(this.state.user)
         if (this.state.user)
             return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
                 return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
