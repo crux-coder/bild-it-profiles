@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import Alert from 'react-s-alert';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { apiPostRequest } from '../utils/api-utils/api-util';
 
 export default class CreateExercise extends Component {
     constructor(props) {
@@ -49,12 +52,13 @@ export default class CreateExercise extends Component {
             date: this.state.date
         }
 
-        axios.post('/exercises', exercise)
+        apiPostRequest('/exercises', exercise)
             .then(res => {
-                this.props.history.push('/home');
-                console.log(res.data);
-            })
-            .catch(err => {
+                if (res.status === 200) {
+                    Alert.success('Exercise successfully created.');
+                    this.props.history.push('/home');
+                }
+            }).catch(err => {
                 console.log(err);
             })
     }
@@ -91,6 +95,8 @@ export default class CreateExercise extends Component {
                             <DatePicker
                                 selected={this.state.date}
                                 onChange={this.onChangeDate}
+                                dateFormat="dd/MM/yyyy"
+                                maxDate={new Date()}
                             />
                         </div>
                     </div>

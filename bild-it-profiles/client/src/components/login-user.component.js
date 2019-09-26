@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import "react-datepicker/dist/react-datepicker.css";
+
+import Alert from 'react-s-alert';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default class Login extends Component {
     constructor(props) {

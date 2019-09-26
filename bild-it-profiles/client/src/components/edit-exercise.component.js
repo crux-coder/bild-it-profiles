@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import Alert from 'react-s-alert';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { apiGetRequest, apiPostRequest } from '../utils/api-utils/api-util';
 
 export default class EditExercise extends Component {
     constructor(props) {
@@ -23,24 +26,24 @@ export default class EditExercise extends Component {
     }
 
     componentDidMount() {
-        axios.get(`/exercises/${this.props.match.params.id}`)
-            .then(response => {
+        apiGetRequest(`/exercises/${this.props.match.params.id}`)
+            .then(res => {
                 this.setState({
-                    selectedUser: response.data.user._id,
-                    description: response.data.description,
-                    duration: response.data.duration,
-                    date: new Date(response.data.date)
+                    selectedUser: res.data.user._id,
+                    description: res.data.description,
+                    duration: res.data.duration,
+                    date: new Date(res.data.date)
                 })
             })
             .catch(function (error) {
                 console.log(error);
             })
 
-        axios.get('/users')
-            .then(response => {
-                if (response.data.length > 0) {
+        apiGetRequest('/users')
+            .then(res => {
+                if (res.data.length > 0) {
                     this.setState({
-                        users: response.data.map(user => user),
+                        users: res.data.map(user => user),
                     })
                 }
             })
@@ -84,10 +87,13 @@ export default class EditExercise extends Component {
             date: this.state.date
         }
 
-        axios.post('/exercises/update/' + this.props.match.params.id, exercise)
-            .then(res => console.log(res.data));
-
-        window.location = '/';
+        apiPostRequest(`/exercises/update/${this.props.match.params.id}`, exercise)
+            .then(res => {
+                if (res.status === 200) {
+                    Alert.success('Exercise succesfully updated.');
+                    this.props.history.push('/home');
+                }
+            }).catch(err => console.log(err));
     }
 
     render() {
@@ -95,23 +101,6 @@ export default class EditExercise extends Component {
             <div>
                 <h3>Edit Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>User: </label>
-                        <select ref="userInput"
-                            required
-                            className="form-control"
-                            value={this.state.selectedUser}
-                            onChange={this.onChangeUser}>
-                            {
-                                this.state.users.map(function (user) {
-                                    return <option
-                                        key={user._id}
-                                        value={user._id}>{user.username}
-                                    </option>;
-                                })
-                            }
-                        </select>
-                    </div>
                     <div className="form-group">
                         <label>Description: </label>
                         <input type="text"

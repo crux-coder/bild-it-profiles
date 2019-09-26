@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import axios from 'axios';
+import { apiPostRequest } from './utils/api-utils/api-util';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 import Navbar from "./components/navbar.component"
 import ExercisesList from "./components/exercises-list.component";
@@ -11,6 +14,7 @@ import RegisterUser from "./components/register-user.component";
 import ViewUser from './components/view-user.component';
 import Login from './components/login-user.component';
 import PrivateRoute from './components/private-route.component';
+import Alert from 'react-s-alert';
 
 class App extends Component {
 
@@ -32,17 +36,17 @@ class App extends Component {
       password: password
     }
 
-    axios.post('/users/login', user)
+    apiPostRequest('/users/login', user)
       .then(res => {
         if (res.status === 200) {
           this.setState({
-            user: res.data,
+            user: res.data.user,
             loggedIn: true
           });
+          Alert.success('Logged in successfully.');
+          localStorage.setItem('accessToken', res.data.token);
         }
-        else
-          console.log(res);
-      });
+      }).catch(err => console.log(err));
   }
 
   logout(e) {
@@ -51,7 +55,7 @@ class App extends Component {
       user: null,
       loggedIn: false
     });
-
+    Alert.success('Logged out successfully.');
   }
 
   render() {
@@ -70,6 +74,7 @@ class App extends Component {
               <PrivateRoute exact path="/user/register" user={this.state.user} loggedIn={this.state.loggedIn} component={RegisterUser} />
               <PrivateRoute exact path="/user/:id" user={this.state.user} loggedIn={this.state.loggedIn} component={ViewUser} />
             </Switch>
+            <Alert stack={{ limit: 3 }} position="top-right" effect="slide" />
           </div>
         </div>
       </Router>

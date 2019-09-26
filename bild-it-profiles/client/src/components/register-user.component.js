@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
+import Alert from 'react-s-alert';
+
 import "react-datepicker/dist/react-datepicker.css";
+
+import { apiPostRequest } from '../utils/api-utils/api-util';
 
 export default class CreateUser extends Component {
     constructor(props) {
@@ -45,14 +48,13 @@ export default class CreateUser extends Component {
             dob: this.state.dob,
         }
 
-        axios.post('/users', user)
+        apiPostRequest('/users', user)
             .then(res => {
-                if (res.status === 200)
-                    window.location = '/';
-                else
-                    console.log(res)
-
-            });
+                if (res.status === 200) {
+                    Alert.success('User successfully registered.');
+                    this.props.history.push(`/user/${res.data._id}`);
+                }
+            }).catch(err => console.log(err));
 
         this.setState({
             email: '',
