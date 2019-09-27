@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
+import { Link } from 'react-router-dom';
+
 import { formatDate } from '../utils/date-formatter';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -68,6 +70,10 @@ export default class ViewUser extends Component {
                 <h4>{this.state.user ? this.state.user.email : ''}</h4>
                 <h4>{this.state.user ? formatDate(this.state.user.dob) : ''}</h4>
                 <hr />
+                <div>
+                    <h3 className="d-inline-block mr-0">Logged Exercises</h3>
+                    <Link to="/create" className="btn btn-primary mb-1 d-inline-block float-right">Create Exercise Log</Link>
+                </div>
                 <table className="table">
                     <thead className="thead-light">
                         <tr>

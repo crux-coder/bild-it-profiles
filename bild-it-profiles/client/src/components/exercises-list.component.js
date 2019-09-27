@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
+import { Link } from 'react-router-dom';
 
 import AuthService from '../utils/auth-utils/auth-service';
 
@@ -52,7 +53,10 @@ export default class ExercisesList extends Component {
     render() {
         return (
             <div>
-                <h3>Logged Exercises</h3>
+                <div>
+                    <h3 className="d-inline-block mr-0">Logged Exercises</h3>
+                    <Link to="/create" className="btn btn-primary mb-1 d-inline-block float-right">Create Exercise Log</Link>
+                </div>
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
