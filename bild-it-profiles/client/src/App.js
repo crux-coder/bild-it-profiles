@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
-import Navbar from "./components/navbar.component"
+import Navbar from "./components/navbar-ui.component"
 import ExercisesList from "./components/exercises-list.component";
 import EditExercise from "./components/edit-exercise.component";
 import CreateExercise from "./components/create-exercise.component";
@@ -68,7 +68,7 @@ class App extends Component {
         <div className="container-flex" >
           {this.state.loggedIn && <Navbar user={this.state.user} logout={this.logout} />}
           <br />
-          <div className="container-fluid">
+          <div className="container-fluid mt-5">
             <Switch>
               <Route exact path='/' render={(props) => <Login {...props} onSubmit={this.onSubmit} />} />
               <PrivateRoute exact path="/home" user={this.state.user} loggedIn={this.state.loggedIn} component={ExercisesList} />

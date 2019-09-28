@@ -64,9 +64,10 @@ export default class ViewUser extends Component {
     render() {
         return (
             <div>
-                <h3>User Page</h3>
+                <h3>{this.state.user ? this.state.user.fullName : ''}</h3>
                 <hr />
-                <h4>{this.state.user ? this.state.user.fullName : ''}</h4>
+                <h4>{this.state.user ? this.state.user.firstName : ''}</h4>
+                <h4>{this.state.user ? this.state.user.lastName : ''}</h4>
                 <h4>{this.state.user ? this.state.user.email : ''}</h4>
                 <h4>{this.state.user ? formatDate(this.state.user.dob) : ''}</h4>
                 <hr />

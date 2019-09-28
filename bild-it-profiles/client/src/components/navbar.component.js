@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { IoIosPerson } from 'react-icons/io';
+import Fab from '@material-ui/core/Fab';
 
 import logo from '../images/bildit.png';
+import '../App.css';
 
 export default class Navbar extends Component {
 
@@ -24,6 +27,9 @@ export default class Navbar extends Component {
                             <Link to="#" onClick={this.props.logout} className="nav-link">Logout</Link>
                         </li>
                     </ul>
+                    <Fab color="default" aria-label="add" className="user-icon">
+                        <IoIosPerson />
+                    </Fab>
                 </div>
             </nav>
         );
