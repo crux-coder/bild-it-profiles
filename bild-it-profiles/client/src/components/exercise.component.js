@@ -11,9 +11,10 @@ export default class Exercise extends Component {
         const props = this.props;
         return (
             <tr>
+                <td>{formatDate(props.exercise.date)}</td>
+                <td>{props.exercise.user.fullName}</td>
                 <td>{props.exercise.description}</td>
                 <td>{props.exercise.duration}</td>
-                <td>{formatDate(props.exercise.date)}</td>
                 <td>
                     <Link to={"/edit/" + props.exercise._id}><FaEdit /></Link> | <a href="#" onClick={() => { props.deleteExercise(props.exercise._id) }}><FaTrash /></a>
                 </td>

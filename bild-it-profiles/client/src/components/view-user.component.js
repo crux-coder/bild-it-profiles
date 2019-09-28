@@ -78,9 +78,9 @@ export default class ViewUser extends Component {
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
+                            <th>Date</th>
                             <th>Description</th>
                             <th>Duration</th>
-                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>

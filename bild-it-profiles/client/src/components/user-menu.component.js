@@ -3,6 +3,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
+import Person from '@material-ui/icons/Person';
+import Shutdown from '@material-ui/icons/PowerSettingsNew';
 
 class NavbarUserMenu extends Component {
     render() {
@@ -15,10 +17,10 @@ class NavbarUserMenu extends Component {
                 open={this.props.anchorEl}
                 onClose={this.props.handleClose}
                 getContentAnchorEl={null}>
-                <MenuItem disabled>{this.props.user.name}</MenuItem>
+                <MenuItem disabled>{this.props.user.fullName}</MenuItem>
                 <Divider />
-                <MenuItem component={Link} onClick={this.props.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.props.handleLogout}>Logout</MenuItem>
+                <MenuItem component={Link} color="inherit" variant="inherit" to={`/user/${this.props.user._id}`} onClick={this.props.handleClose}><Person /> Profile</MenuItem>
+                <MenuItem onClick={this.props.handleLogout}><Shutdown /> Logout</MenuItem>
             </Menu>
         )
     }

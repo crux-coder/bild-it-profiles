@@ -4,15 +4,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import MenuIcon from '@material-ui/icons/Menu';
 import NavbarUserMenu from './user-menu.component';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import { fade } from '@material-ui/core/styles';
 import logo from '../images/bildit.png';
 import '../App.css';
@@ -204,7 +201,7 @@ class AppNavbar extends Component {
             <AppBar className={clsx(classes.appBar, {
                 [classes.appBarShift]: this.props.openDrawer,
             })}>
-                <NavbarUserMenu anchorEl={this.state.anchorEl} handleClose={this.handleClose} handleLogout={this.props.handleLogout}
+                <NavbarUserMenu anchorEl={this.state.anchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
                     user={this.props.user} {...this.props} />
                 <Toolbar>
                     {/* <IconButton edge='start' className={clsx(classes.menuButton, this.props.openDrawer && classes.hide)}
@@ -217,15 +214,13 @@ class AppNavbar extends Component {
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         <IconButton
-                            edge='end'
-                            aria-label='Account of current user'
-                            aria-controls='primary-search-account-menu'
-                            aria-haspopup='true'
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
                             onClick={this.handleClick}
-                            color='inherit'
+                            color="inherit"
                         >
-                            <Avatar alt={this.props.user.firstName} src={this.props.user.imageUrl}
-                                className={classes.avatar} />
+                            <AccountCircle />
                         </IconButton>
                     </div>
                     <div className={classes.sectionMobile}>

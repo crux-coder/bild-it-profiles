@@ -17,12 +17,10 @@ export default class ExercisesList extends Component {
     }
 
     componentDidMount() {
-        const user = this.Auth.getProfile();
-        this.Auth.fetch(`/users/${user._id}`, { method: 'GET' })
+        this.Auth.fetch(`/exercises`, { method: 'GET' })
             .then(res => {
                 this.setState({
-                    user: res.data,
-                    exercises: res.data.exercises
+                    exercises: res.data
                 })
             })
             .catch((error) => {
@@ -43,11 +41,9 @@ export default class ExercisesList extends Component {
     }
 
     exerciseList() {
-        if (this.state.user) {
-            return this.state.exercises ? this.state.exercises.map(currentexercise => {
-                return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
-            }) : '';
-        }
+        return this.state.exercises ? this.state.exercises.map(currentexercise => {
+            return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+        }) : '';
     }
 
     render() {
@@ -60,9 +56,10 @@ export default class ExercisesList extends Component {
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
+                            <th>Date</th>
+                            <th>Trainee</th>
                             <th>Description</th>
                             <th>Duration</th>
-                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
