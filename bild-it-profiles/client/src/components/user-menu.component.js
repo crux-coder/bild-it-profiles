@@ -19,7 +19,7 @@ class NavbarUserMenu extends Component {
                 getContentAnchorEl={null}>
                 <MenuItem disabled>{this.props.user.fullName}</MenuItem>
                 <Divider />
-                <MenuItem component={Link} color="inherit" variant="inherit" to={`/user/${this.props.user._id}`} onClick={this.props.handleClose}><Person /> Profile</MenuItem>
+                <MenuItem component={Link} variant="default" to={`/user/${this.props.user._id}`} onClick={this.props.handleClose}><Person /> Profile</MenuItem>
                 <MenuItem onClick={this.props.handleLogout}><Shutdown /> Logout</MenuItem>
             </Menu>
         )

@@ -1,15 +1,35 @@
 import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import AuthService from '../utils/auth-utils/auth-service';
 
-export default class ExercisesList extends Component {
+const styles = (theme => ({
+    root: {
+        width: '100%',
+        marginTop: theme.spacing(3),
+        overflowX: 'auto',
+    },
+    table: {
+        minWidth: 650,
+    },
+}));
+
+class ExercisesList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: props.user
+            user: props.user,
+            exercises: []
         };
 
         this.Auth = new AuthService();
@@ -42,32 +62,42 @@ export default class ExercisesList extends Component {
 
     exerciseList() {
         return this.state.exercises ? this.state.exercises.map(currentexercise => {
-            return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+            return <Exercise user={true} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
         }) : '';
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
             <div>
                 <div>
                     <h3 className="d-inline-block mr-0">Logged Exercises</h3>
                     <Link to="/create" className="btn btn-primary mb-1 d-inline-block float-right">Create Exercise Log</Link>
                 </div>
-                <table className="table">
-                    <thead className="thead-light">
-                        <tr>
-                            <th>Date</th>
-                            <th>Trainee</th>
-                            <th>Description</th>
-                            <th>Duration</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.exerciseList() || <tr><td>No entries.</td></tr>}
-                    </tbody>
-                </table>
+                <Paper className={classes.root}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Date</TableCell>
+                                <TableCell align="left">Trainee</TableCell>
+                                <TableCell align="left">Description</TableCell>
+                                <TableCell align="left">Duration</TableCell>
+                                <TableCell align="center">Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.exerciseList()}
+                        </TableBody>
+                    </Table>
+                </Paper>
             </div>
         )
     }
 }
+
+ExercisesList.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ExercisesList);

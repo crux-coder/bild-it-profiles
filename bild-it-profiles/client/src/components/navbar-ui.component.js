@@ -80,7 +80,7 @@ const styles = theme => ({
         display: 'none',
     },
     appBar: {
-        backgroundColor: '#424242',
+        backgroundColor: '#222222',
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
