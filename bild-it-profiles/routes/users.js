@@ -18,7 +18,7 @@ router.route('/:id').get(auth, (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/').post(auth, (req, res) => {
+router.route('/').post((req, res) => {
     const { email, password, firstName, lastName, dob } = req.body;
     let newUser = new User({ email, password, firstName, lastName, dob });
     bcrypt.hash(password, 10, (err, hash) => {

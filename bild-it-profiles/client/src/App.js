@@ -71,7 +71,7 @@ class App extends Component {
               <PrivateRoute exact path="/user/register" user={this.state.user} loggedIn={this.state.loggedIn} component={RegisterUser} />
               <PrivateRoute exact path="/user/:id" user={this.state.user} loggedIn={this.state.loggedIn} component={ViewUser} />
             </Switch>
-            <Alert stack={{ limit: 3 }} offset="100" position="top-right" effect="slide" />
+            <Alert stack={{ limit: 3 }} offset={100} position="top-right" effect="slide" />
           </div>
         </div>
       </Router>
