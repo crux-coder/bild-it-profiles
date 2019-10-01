@@ -25,7 +25,7 @@ export default class Exercise extends Component {
                     </Typography></TableCell>}
                 <TableCell align="left">{props.exercise.description}</TableCell>
                 <TableCell align="left">{props.exercise.duration}</TableCell>
-                <TableCell align="center">
+                {/* <TableCell align="center">
                     <Link to={"/edit/" + props.exercise._id}>
                         <IconButton
                             aria-label="edit exercise"
@@ -45,7 +45,7 @@ export default class Exercise extends Component {
                     >
                         <Delete />
                     </IconButton>
-                </TableCell>
+                </TableCell> */}
             </TableRow>
         )
     }

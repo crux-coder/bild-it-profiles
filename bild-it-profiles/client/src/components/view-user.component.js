@@ -102,8 +102,8 @@ class ViewUser extends Component {
                             <TableRow>
                                 <TableCell>Date</TableCell>
                                 <TableCell align="left">Description</TableCell>
-                                <TableCell align="left">Duration</TableCell>
-                                <TableCell align="center">Actions</TableCell>
+                                <TableCell align="left">Duration (min)</TableCell>
+                                {/* <TableCell align="center">Actions</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
