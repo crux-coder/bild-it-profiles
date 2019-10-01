@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Alert from 'react-s-alert';
+import AuthService from '../utils/auth-utils/auth-service';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import '../App.css';
@@ -12,7 +14,9 @@ export default class Login extends Component {
             email: '',
             password: ''
         }
+        this.Auth = new AuthService();
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.login = this.login.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -32,7 +36,23 @@ export default class Login extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        this.props.onSubmit(user.email, user.password);
+        this.login(user.email, user.password);
+    }
+
+    login(email, password) {
+        this.Auth.login(email, password)
+            .then(res => {
+                this.setState({
+                    user: res.data.user,
+                    loggedIn: true
+                });
+                this.props.loggedIn({
+                    user: res.data.user,
+                    loggedIn: true
+                });
+                Alert.success('Logged in successfully.');
+                this.props.history.push('/home');
+            }).catch(err => console.log(err));
     }
 
     render() {

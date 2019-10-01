@@ -7,6 +7,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Fab from '@material-ui/core/Fab';
+import Typography from '@material-ui/core/Typography';
+import AddBox from '@material-ui/icons/AddBox';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -26,6 +29,13 @@ const styles = (theme => ({
     table: {
         minWidth: 650,
     },
+    addButton: {
+        float: 'right',
+        boxShadow: 'none',
+        '&:hover': {
+            color: 'white',
+        },
+    }
 }));
 
 class ViewUser extends Component {
@@ -93,8 +103,14 @@ class ViewUser extends Component {
                 <h4>{this.state.user ? formatDate(this.state.user.dob) : ''}</h4>
                 <hr />
                 <div>
-                    <h3 className="d-inline-block mr-0">Logged Exercises</h3>
-                    <Link to="/create" className="btn btn-primary mb-1 d-inline-block float-right">Create Exercise Log</Link>
+                    <Fab color="primary" variant="extended" to="/create" aria-label="delete" className={classes.addButton} component={Link}>
+                        New exercise log
+                            <AddBox className="ml-3" />
+                    </Fab>
+                    <Typography className={classes.titleDiv} variant="h4" component="h3" style={{ overflow: 'hidden' }} display="block">
+                        <span>Logged exercises</span>
+                    </Typography>
+                    <hr />
                 </div>
                 <Paper className={classes.root}>
                     <Table className={classes.table}>
