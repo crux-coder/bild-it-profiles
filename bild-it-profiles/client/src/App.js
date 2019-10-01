@@ -67,8 +67,7 @@ class App extends Component {
         {this.state.loggedIn && <Redirect to={{ pathname: '/home' }} />}
         <div className="container-flex" >
           {this.state.loggedIn && <Navbar user={this.state.user} logout={this.logout} />}
-          <br />
-          <div className="container-fluid mt-5">
+          <div className="container-fluid mt-5 pt-5">
             <Switch>
               <Route exact path='/' render={(props) => <Login {...props} onSubmit={this.onSubmit} />} />
               <PrivateRoute exact path="/home" user={this.state.user} loggedIn={this.state.loggedIn} component={ExercisesList} />
