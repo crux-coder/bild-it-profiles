@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import DatePicker from 'react-datepicker';
 import Alert from 'react-s-alert';
+import TextField from '@material-ui/core/TextField';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    DatePicker,
+} from '@material-ui/pickers';
+import Save from '@material-ui/icons/Save';
+import Button from '@material-ui/core/Button';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -71,40 +78,57 @@ export default class CreateExercise extends Component {
                 <h3>Create New Exercise Log</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                        <label>User: {this.state.user.fullName}</label>
-                    </div>
-                    <div className="form-group">
-                        <label>Description: </label>
-                        <input type="text"
+                        <TextField
+                            id="filled-multiline-flexible"
+                            label="Exercise description"
+                            multiline
+                            fullWidth
+                            margin="normal"
+                            variant="outlined"
+                            rowsMax="5"
                             required
-                            className="form-control"
                             value={this.state.description}
                             onChange={this.onChangeDescription}
                         />
                     </div>
                     <div className="form-group">
-                        <label>Duration (in minutes): </label>
-                        <input
-                            type="text"
-                            className="form-control"
+                        <TextField
+                            id="outlined-number"
+                            label="Duration (in minutes)"
                             value={this.state.duration}
                             onChange={this.onChangeDuration}
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            margin="normal"
+                            variant="outlined"
                         />
                     </div>
                     <div className="form-group">
-                        <label>Date: </label>
-                        <div>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <DatePicker
-                                selected={this.state.date}
+                                disableToolbar
+                                variant="inline"
+                                inputVariant="outlined"
+                                format="dd.MM.yyyy"
+                                margin="normal"
+                                disableFuture
+                                clearable
+                                autoOk
+                                value={this.state.date}
                                 onChange={this.onChangeDate}
-                                dateFormat="dd/MM/yyyy"
-                                maxDate={new Date()}
+                                id="date-picker-inline"
+                                label="Date"
                             />
-                        </div>
+                        </MuiPickersUtilsProvider>
                     </div>
 
                     <div className="form-group">
-                        <input type="submit" value="Create Exercise Log" className="btn btn-primary" />
+                        <Button variant="contained" type="submit" size="large" color="primary">
+                            Save
+                            <Save className="ml-3" />
+                        </Button>
                     </div>
                 </form>
             </div>
