@@ -1,5 +1,4 @@
 const Exercise = require('./exercise.model');
-const User = require('../users/user.model');
 
 function fetchExercises({ query = {}, populate = [], lean = true } = {}) {
     const promise = Exercise.find({ ...query });
