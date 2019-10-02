@@ -8,8 +8,8 @@ function fetchExercises({ query = {}, populate = [], lean = true } = {}) {
 };
 
 function fetchExerciseById({ id = {}, populate = [], lean = true } = {}) {
-    const exercise = Exercise.findById(id);
-    const populatedPromise = exercise.populate(...populate);
+    const promise = Exercise.findById(id);
+    const populatedPromise = promise.populate(...populate);
     return lean ? populatedPromise.lean() : populatedPromise;
 }
 

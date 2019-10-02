@@ -1,45 +1,36 @@
 const router = require('express').Router();
 const User = require('./user.model');
-const bcrypt = require('bcrypt');
+const UserService = require('./user.service');
 const jwt = require('jsonwebtoken');
 const config = require('../../security/config');
 const auth = require('../../security/token.utils');
 
 router.route('/').get(auth, (req, res) => {
-    User.find()
+    UserService.fetchUsers()
         .then(users => res.json(users))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/:id').get(auth, (req, res) => {
-    User.findById(req.params.id)
-        .populate('exercises')
+    const opts = { id: req.params.id, populate: ['exercises'], lean: false }
+    UserService.fetchUserById(opts)
         .then(user => res.json(user))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/').post((req, res) => {
-    const { email, password, firstName, lastName, dob } = req.body;
-    let newUser = new User({ email, password, firstName, lastName, dob });
-    bcrypt.hash(password, 10, (err, hash) => {
-        newUser.password = hash;
-        newUser.save()
-            .then((user) => res.json(user))
-            .catch(err => {
-                console.log(err)
-                res.status(400).json('Error: ' + err)
-            });
-    });
+    UserService.createUser(req.body)
+        .then((user) => res.json(user))
+        .catch(err => res.status(400).json('Error: ' + err));
 
 });
 
 router.route('/login').post((req, res) => {
     const { email, password } = req.body;
-    User.findOne({ email })
-        .populate('exercises')
+    User.findOne({ email: email })
         .then(user => {
             if (user.email === email) {
-                bcrypt.compare(password, user.password, (err, result) => {
+                user.comparePassword(password, (err, result) => {
                     if (result) {
                         let token = jwt.sign(user.toObject(),
                             config.secret,

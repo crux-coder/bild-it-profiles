@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
+const BCRYPT_PASSES = 12;
 
 const Schema = mongoose.Schema;
 
@@ -9,10 +12,10 @@ const UserSchema = new Schema({
     password: { type: String, required: true },
     dob: { type: Date, required: true }
 }, {
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true },
-    timestamps: true,
-});
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true },
+        timestamps: true,
+    });
 
 UserSchema.virtual('exercises', {
     ref: 'Exercise',
@@ -23,10 +26,26 @@ UserSchema.virtual('exercises', {
 UserSchema.virtual('fullName')
     .get(function () {
         return this.firstName + ' ' + this.lastName;
-    })
-    .set(function (fullName) {
-        this.fullName = fullName;
-    })
+    });
+
+UserSchema.pre('save', function (next) {
+    var user = this;
+
+    if (!user.isModified('password')) return next();
+
+    bcrypt.hash(user.password, BCRYPT_PASSES, function (err, hash) {
+        if (err) return next(err);
+        user.password = hash;
+        next();
+    });
+});
+
+UserSchema.methods.comparePassword = function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
 
 const User = mongoose.model('User', UserSchema);
 

@@ -1,6 +1,4 @@
 const router = require('express').Router();
-const Exercise = require('./exercise.model');
-const User = require('../users/user.model');
 const auth = require('../../security/token.utils');
 const ExerciseService = require('./exercise.service');
 
@@ -15,7 +13,6 @@ router.route('/').get(auth, (req, res) => {
 
 router.route('/').post(auth, (req, res) => {
     const exercise = ExerciseService.createExercise(req.body);
-
     exercise.then(exercise => res.json(exercise));
 });
 
