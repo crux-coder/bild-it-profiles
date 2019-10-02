@@ -3,8 +3,8 @@ const config = require('./config.js');
 
 module.exports = auth = (req, res, next) => {
     let token = req.headers['x-access-token'] || req.headers['authorization'];
-    token = token.split(' ')[1];
     if (token) {
+        token = token.split(' ')[1];
         jwt.verify(token, config.secret, (err, decoded) => {
             if (err) {
                 return res.status(401).json({
