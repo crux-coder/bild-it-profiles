@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const User = require('../models/user.model');
+const User = require('./user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('../security/config');
-const auth = require('../security/token.utils');
+const config = require('../../security/config');
+const auth = require('../../security/token.utils');
 
 router.route('/').get(auth, (req, res) => {
     User.find()

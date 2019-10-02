@@ -9,10 +9,10 @@ const UserSchema = new Schema({
     password: { type: String, required: true },
     dob: { type: Date, required: true }
 }, {
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
-        timestamps: true,
-    });
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
+    timestamps: true,
+});
 
 UserSchema.virtual('exercises', {
     ref: 'Exercise',
@@ -23,7 +23,10 @@ UserSchema.virtual('exercises', {
 UserSchema.virtual('fullName')
     .get(function () {
         return this.firstName + ' ' + this.lastName;
-    });
+    })
+    .set(function (fullName) {
+        this.fullName = fullName;
+    })
 
 const User = mongoose.model('User', UserSchema);
 

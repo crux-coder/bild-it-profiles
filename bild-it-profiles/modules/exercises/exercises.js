@@ -1,13 +1,15 @@
 const router = require('express').Router();
-const Exercise = require('../models/exercise.model');
-const User = require('../models/user.model');
-const auth = require('../security/token.utils');
+const Exercise = require('./exercise.model');
+const User = require('../users/user.model');
+const auth = require('../../security/token.utils');
+const ExerciseService = require('./exercise.service');
 
 router.route('/').get(auth, (req, res) => {
-    Exercise.find()
-        .populate('user')
-        .then(exercises => res.json(exercises))
-        .catch(err => res.status(400).json('Error: ' + err));
+    const opts = { populate: [{ path: "user" }] }
+    const exercises = ExerciseService.fetchExercises(opts);
+    exercises.then(exercises => {
+        res.json(exercises)
+    });
 });
 
 
@@ -40,6 +42,7 @@ router.route('/').post(auth, (req, res) => {
 });
 
 router.route('/:id').get(auth, (req, res) => {
+    ExerciseService.fetchExercises()
     Exercise.findById(req.params.id)
         .populate('user')
         .then(exercise => res.json(exercise))
