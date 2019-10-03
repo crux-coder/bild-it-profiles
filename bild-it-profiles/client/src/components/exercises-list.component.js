@@ -10,6 +10,13 @@ import Fab from '@material-ui/core/Fab';
 import AddBox from '@material-ui/icons/AddBox';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -44,20 +51,56 @@ class ExercisesList extends Component {
         };
 
         this.AuthService = new AuthService();
-        this.deleteExercise = this.deleteExercise.bind(this)
+        this.deleteExercise = this.deleteExercise.bind(this);
+        this.toggleCommentDialog = this.toggleCommentDialog.bind(this);
+        this.handleCommentChange = this.handleCommentChange.bind(this);
+        this.postComment = this.postComment.bind(this);
     }
 
     componentDidMount() {
         this.AuthService.fetch(`/exercises`, { method: 'GET' })
             .then(res => {
                 this.setState({
-                    exercises: res.data
+                    exercises: res.data,
+                    open: false,
+                    exerciseId: '',
+                    comment: ''
                 })
             })
             .catch((error) => {
                 console.log(error);
             })
 
+    }
+
+    toggleCommentDialog(exerciseId) {
+        this.setState({
+            open: !this.state.open,
+            exerciseId: exerciseId
+        });
+    }
+
+    handleCommentChange(e) {
+        this.setState({
+            comment: e.target.value
+        })
+    }
+
+    postComment() {
+        const user = this.AuthService.getProfile();
+        const comment = {
+            user: user._id,
+            comment: this.state.comment,
+            exercise: this.state.exerciseId
+        };
+        console.log(comment)
+        this.AuthService.fetch('/comments', {
+            method: 'POST',
+            data: JSON.stringify(comment)
+        }).then(() => {
+            Alert.success('Comment successfully posted.');
+            this.toggleCommentDialog();
+        });
     }
 
     deleteExercise(id) {
@@ -73,7 +116,7 @@ class ExercisesList extends Component {
 
     exerciseList() {
         return this.state.exercises ? this.state.exercises.map(currentexercise => {
-            return <Exercise printUser={true} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+            return <Exercise printUser={true} toggleCommentDialog={this.toggleCommentDialog} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
         }) : '';
     }
 
@@ -108,7 +151,32 @@ class ExercisesList extends Component {
                         </TableBody>
                     </Table>
                 </Paper>
-            </div >
+
+                <Dialog open={this.state.open} onClose={this.toggleCommentDialog} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Comment</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            multiline
+                            id="name"
+                            label="Comment"
+                            onChange={this.handleCommentChange}
+                            value={this.state.comment}
+                            type="text"
+                            fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.toggleCommentDialog} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.postComment} color="primary">
+                            Post
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         )
     }
 }

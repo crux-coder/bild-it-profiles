@@ -5,8 +5,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
+import CommentIcon from '@material-ui/icons/AddComment';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+
 import ROLES from '../constants/roles';
 import AuthService from '../utils/auth-service';
 
@@ -14,9 +16,10 @@ export default class Exercise extends Component {
 
     constructor(props) {
         super(props);
-
         this.AuthService = new AuthService();
     }
+
+
 
     render() {
         const props = this.props;
@@ -52,6 +55,15 @@ export default class Exercise extends Component {
                         color="secondary"
                     >
                         <Delete />
+                    </IconButton>
+                    <IconButton
+                        aria-label="leave a comment"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={() => props.toggleCommentDialog(props.exercise._id)}
+                        color="secondary"
+                    >
+                        <CommentIcon />
                     </IconButton>
                 </TableCell>}
             </TableRow>
