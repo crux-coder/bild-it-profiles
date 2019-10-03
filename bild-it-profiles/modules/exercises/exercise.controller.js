@@ -4,7 +4,7 @@ const ROLES = require('../../constants/roles');
 const ExerciseService = require('./exercise.service');
 
 router.get('/', auth(), (req, res) => {
-    const opts = { populate: [{ path: 'user', select: 'firstName lastName fullName' }], lean: false }
+    const opts = { populate: [{ path: 'user', select: 'firstName lastName fullName' }, { path: 'comments' }], lean: false }
     const exercises = ExerciseService.fetchExercises(opts);
     exercises.then(exercises => {
         res.json(exercises)

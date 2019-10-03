@@ -27,9 +27,11 @@ connection.once('open', () => {
 
 const exerciseRouter = require('./modules/exercises/exercise.controller');
 const userRouter = require('./modules/users/user.controller');
+const commentRouter = require('./modules/commnets/comment.controller');
 
 app.use('/v1/api/exercises', exerciseRouter);
 app.use('/v1/api/users', userRouter);
+app.use('/v1/api/comments', commentRouter);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
