@@ -251,7 +251,7 @@ class AppNavbar extends Component {
                         <div className={classes.nav}>
                             <Button color="inherit" component={Link} to='/home' className={classes.navBtn}>Home</Button>
                             <Button color="inherit" component={Link} to={`/user/${this.state.user._id}`} className={classes.navBtn}>Profile</Button>
-                            {this.AuthService.hasRoles(ROLES.ADMIN) && <Button color="inherit" component={Link} to={'/users'} className={classes.navBtn}>Users</Button>}
+                            {this.AuthService.hasRoles(ROLES.ADMIN) && <Button color="inherit" component={Link} to={'/all-users'} className={classes.navBtn}>Users</Button>}
                         </div>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
@@ -281,7 +281,7 @@ class AppNavbar extends Component {
                 <BottomNavigation showLabels value={this.state.navValue} className={classes.bottomNav} onChange={this.setNavValue}>
                     <BottomNavigationAction component={Link} className={classes.navBtn} to='/home' label="Home" value="home" icon={<HomeIcon />} />
                     <BottomNavigationAction component={Link} className={classes.navBtn} to={`/user/${this.state.user._id}`} label="Profile" value="profile" icon={<AccountCircle />} />
-                    {this.AuthService.hasRoles(ROLES.ADMIN) && <BottomNavigationAction component={Link} className={classes.navBtn} to={'/users'} label="Users" value="users" icon={<PeopleIcon />} />}
+                    {this.AuthService.hasRoles(ROLES.ADMIN) && <BottomNavigationAction component={Link} className={classes.navBtn} to={'/all-users'} label="Users" value="users" icon={<PeopleIcon />} />}
                 </BottomNavigation>
             </div>);
     }

@@ -12,6 +12,7 @@ import EditExercise from "./components/edit-exercise.component";
 import CreateExercise from "./components/create-exercise.component";
 import RegisterUser from "./components/register-user.component";
 import ViewUser from './components/view-user.component';
+import ViewUsers from './components/view-users.component';
 import Login from './components/login-user.component';
 import PrivateRoute from './components/private-route.component';
 import Alert from 'react-s-alert';
@@ -70,6 +71,7 @@ class App extends Component {
               <PrivateRoute exact path="/create" user={this.state.user} loggedIn={this.state.loggedIn} component={CreateExercise} />
               <PrivateRoute exact path="/user/register" user={this.state.user} loggedIn={this.state.loggedIn} component={RegisterUser} />
               <PrivateRoute exact path="/user/:id" user={this.state.user} loggedIn={this.state.loggedIn} component={ViewUser} />
+              <PrivateRoute exact path="/all-users" user={this.state.user} loggedIn={this.state.loggedIn} component={ViewUsers} />
             </Switch>
             <Alert stack={{ limit: 3 }} offset={100} position="top-right" effect="slide" />
           </div>

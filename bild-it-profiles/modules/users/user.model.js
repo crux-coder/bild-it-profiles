@@ -11,7 +11,8 @@ const UserSchema = new Schema({
     lastName: { type: String, required: true, trim: true },
     password: { type: String, required: true },
     dob: { type: Date, required: true },
-    roles: { type: [String], default: ['USER'] }
+    roles: { type: [String], default: ['USER'] },
+    approved: { type: Boolean, default: false }
 }, {
         toObject: { virtuals: true },
         toJSON: { virtuals: true },
