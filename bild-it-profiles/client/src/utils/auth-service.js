@@ -1,5 +1,5 @@
 import decode from 'jwt-decode';
-import { API_BASE_URL } from '../api-utils/api-constants';
+import { API_BASE_URL } from './api-constants';
 import axios from 'axios';
 
 
@@ -67,6 +67,12 @@ export default class AuthService {
         return decode(this.getToken());
     }
 
+    hasRoles(roles) {
+        const user = this.getProfile();
+        if (roles.length && !user.roles.some(role => roles.includes(role)))
+            return false;
+        return true;
+    }
 
     fetch(url, options) {
         // performs api calls sending the required authentication headers

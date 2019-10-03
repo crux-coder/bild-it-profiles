@@ -13,8 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import ROLES from '../constants/roles';
 
-import AuthService from '../utils/auth-utils/auth-service';
+import AuthService from '../utils/auth-service';
 
 const styles = (theme => ({
     root: {
@@ -42,12 +43,12 @@ class ExercisesList extends Component {
             exercises: []
         };
 
-        this.Auth = new AuthService();
+        this.AuthService = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this)
     }
 
     componentDidMount() {
-        this.Auth.fetch(`/exercises`, { method: 'GET' })
+        this.AuthService.fetch(`/exercises`, { method: 'GET' })
             .then(res => {
                 this.setState({
                     exercises: res.data
@@ -60,7 +61,7 @@ class ExercisesList extends Component {
     }
 
     deleteExercise(id) {
-        this.Auth.fetch('/exercises/' + id, { method: 'DELETE' })
+        this.AuthService.fetch('/exercises/' + id, { method: 'DELETE' })
             .then(() => {
                 Alert.success('Exercise successfully deleted.');
             });
@@ -72,7 +73,7 @@ class ExercisesList extends Component {
 
     exerciseList() {
         return this.state.exercises ? this.state.exercises.map(currentexercise => {
-            return <Exercise user={true} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+            return <Exercise printUser={true} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
         }) : '';
     }
 
@@ -99,7 +100,7 @@ class ExercisesList extends Component {
                                 <TableCell align="left">Trainee</TableCell>
                                 <TableCell align="left">Description</TableCell>
                                 <TableCell align="left">Duration (min)</TableCell>
-                                {/* <TableCell align="center">Actions</TableCell> */}
+                                {this.AuthService.hasRoles(ROLES.ADMIN) && <TableCell align="center">Actions</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>

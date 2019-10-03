@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Alert from 'react-s-alert';
-import AuthService from '../utils/auth-utils/auth-service';
+import AuthService from '../utils/auth-service';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -141,7 +141,7 @@ export default class Login extends Component {
     render() {
         return (
             <div className="row justify-content-center vertical-center mt-0">
-                <div className="col-4 text-center">
+                <div className="text-center m-1">
                     <img src={logo} alt="bildit logo" className="mb-5" />
                     <Paper square>
                         <Tabs
