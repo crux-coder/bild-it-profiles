@@ -141,7 +141,7 @@ export default class Login extends Component {
     render() {
         return (
             <div className="row justify-content-center vertical-center mt-0">
-                <div className="col-4 text-center">
+                <div className="text-center m-1">
                     <img src={logo} alt="bildit logo" className="mb-5" />
                     <Paper square>
                         <Tabs

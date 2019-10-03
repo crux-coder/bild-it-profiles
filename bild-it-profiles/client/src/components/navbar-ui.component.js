@@ -22,12 +22,6 @@ const styles = theme => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
-    title: {
-        display: 'none',
-        [theme.breakpoints.up('sm')]: {
-            display: 'block',
-        },
-    },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -80,7 +74,7 @@ const styles = theme => ({
         display: 'none',
     },
     appBar: {
-        backgroundColor: '#222222',
+        backgroundColor: '#333333',
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
@@ -208,8 +202,8 @@ class AppNavbar extends Component {
                         onClick={this.props.toggleDrawer} color='inherit' aria-label='Menu'>
                         <MenuIcon />
                     </IconButton> */}
-                    <Typography className={classes.title} variant='h6' noWrap>
-                        <Link to="/home"><img width="50%" src={logo} alt="bildit logo" /></Link>
+                    <Typography variant='h6' noWrap>
+                        <Link to="/home"><img width="40%" src={logo} alt="bildit logo" /></Link>
                     </Typography>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
