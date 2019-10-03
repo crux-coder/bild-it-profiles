@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import AuthService from './utils/auth-utils/auth-service';
+import AuthService from './utils/auth-service';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-s-alert/dist/s-alert-default.css';

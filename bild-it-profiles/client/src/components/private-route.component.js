@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-import AuthService from '../utils/auth-utils/auth-service';
+import AuthService from '../utils/auth-service';
 
 
 
