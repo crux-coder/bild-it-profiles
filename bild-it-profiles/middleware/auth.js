@@ -2,7 +2,7 @@ let jwt = require('jsonwebtoken');
 const config = require('../security/config.js');
 
 
-module.exports = function (roles = []) {
+module.exports = function (roles = ['USER']) {
     if (typeof roles === 'string') {
         roles = [roles];
     }
