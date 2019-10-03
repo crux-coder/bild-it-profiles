@@ -4,7 +4,7 @@ import Alert from 'react-s-alert';
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import AuthService from '../utils/auth-utils/auth-service';
+import AuthService from '../utils/auth-service';
 
 export default class CreateUser extends Component {
     constructor(props) {

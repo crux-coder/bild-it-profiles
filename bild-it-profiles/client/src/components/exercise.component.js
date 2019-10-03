@@ -7,8 +7,16 @@ import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import ROLES from '../constants/roles';
+import AuthService from '../utils/auth-service';
 
 export default class Exercise extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.AuthService = new AuthService();
+    }
 
     render() {
         const props = this.props;
@@ -17,7 +25,7 @@ export default class Exercise extends Component {
                 <TableCell component="th" scope="row">
                     {formatDate(props.exercise.date)}
                 </TableCell>
-                {props.user && <TableCell align="left">
+                {props.printUser && <TableCell align="left">
                     <Typography>
                         <Link to={`/user/${props.exercise.user._id}`} color="inherit">
                             {props.exercise.user.fullName}
@@ -25,7 +33,7 @@ export default class Exercise extends Component {
                     </Typography></TableCell>}
                 <TableCell align="left">{props.exercise.description}</TableCell>
                 <TableCell align="left">{props.exercise.duration}</TableCell>
-                {/* <TableCell align="center">
+                {this.AuthService.hasRoles([ROLES.ADMIN]) && <TableCell align="center">
                     <Link to={"/edit/" + props.exercise._id}>
                         <IconButton
                             aria-label="edit exercise"
@@ -45,7 +53,7 @@ export default class Exercise extends Component {
                     >
                         <Delete />
                     </IconButton>
-                </TableCell> */}
+                </TableCell>}
             </TableRow>
         )
     }

@@ -13,12 +13,13 @@ import AddBox from '@material-ui/icons/AddBox';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import ROLES from '../constants/roles';
 
 import { formatDate } from '../utils/date-formatter';
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import AuthService from '../utils/auth-utils/auth-service';
+import AuthService from '../utils/auth-service';
 
 const styles = (theme => ({
     root: {
@@ -43,15 +44,16 @@ class ViewUser extends Component {
         super(props);
 
         this.state = {
-            user: props.user
+            currentUser: props.user,
+            user: null
         }
 
-        this.Auth = new AuthService();
+        this.AuthService = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this);
     }
 
     componentDidMount() {
-        this.Auth.fetch(`/users/${this.props.match.params.id}`, {
+        this.AuthService.fetch(`/users/${this.props.match.params.id}`, {
             method: 'GET'
         })
             .then(res => {
@@ -67,7 +69,7 @@ class ViewUser extends Component {
     }
 
     deleteExercise(id) {
-        this.Auth.fetch(`/exercises/${id}`, {
+        this.AuthService.fetch(`/exercises/${id}`, {
             method: 'DELETE'
         })
             .then(res => {
@@ -86,7 +88,7 @@ class ViewUser extends Component {
     exerciseList() {
         if (this.state.user)
             return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
-                return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+                return <Exercise user={this.state.currentUser} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
             }) : '';
     }
 
@@ -119,7 +121,7 @@ class ViewUser extends Component {
                                 <TableCell>Date</TableCell>
                                 <TableCell align="left">Description</TableCell>
                                 <TableCell align="left">Duration (min)</TableCell>
-                                {/* <TableCell align="center">Actions</TableCell> */}
+                                {this.AuthService.hasRoles(ROLES.ADMIN) && <TableCell align="center">Actions</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
