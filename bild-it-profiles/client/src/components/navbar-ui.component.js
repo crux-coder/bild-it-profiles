@@ -11,11 +11,44 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { fade } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import HomeIcon from '@material-ui/icons/Home';
+import PeopleIcon from '@material-ui/icons/PeopleAlt';
+import Auth from '../utils/auth-service';
+import ROLES from '../constants/roles';
+
 import logo from '../images/bildit.png';
 import '../App.css';
 
 const drawerWidth = 260;
 const styles = theme => ({
+    nav: {
+        display: 'none',
+        backgroundColor: '#333333',
+        [theme.breakpoints.up('md')]: {
+            display: 'block',
+        },
+
+    },
+    bottomNav: {
+        display: 'none',
+        width: '100%',
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: '#EEE',
+        [theme.breakpoints.down('md')]: {
+            display: 'flex',
+        },
+
+    },
+    navBtn: {
+        textDecoration: 'none',
+        '&:hover': {
+            textDecoration: 'none'
+        }
+    },
     grow: {
         flexGrow: 1,
     },
@@ -161,12 +194,15 @@ class AppNavbar extends Component {
             user: props.user,
             menu: false,
             anchorEl: null,
-            openDrawer: false
+            openDrawer: false,
+            navValue: 'home'
         };
+        this.AuthService = new Auth();
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
         this.toggleDrawer = this.toggleDrawer.bind(this);
+        this.setNavValue = this.setNavValue.bind(this);
     }
 
     handleClick(event) {
@@ -187,49 +223,67 @@ class AppNavbar extends Component {
         })
     }
 
+    setNavValue = (event, newValue) => {
+        this.setState({
+            navValue: newValue
+        });
+    };
+
     render() {
         //TODO: Refactor this render function
         const { classes } = this.props;
 
         return (
-            <AppBar className={clsx(classes.appBar, {
-                [classes.appBarShift]: this.props.openDrawer,
-            })}>
-                <NavbarUserMenu anchorEl={this.state.anchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
-                    user={this.props.user} {...this.props} />
-                <Toolbar>
-                    {/* <IconButton edge='start' className={clsx(classes.menuButton, this.props.openDrawer && classes.hide)}
+            <div>
+                <AppBar className={clsx(classes.appBar, {
+                    [classes.appBarShift]: this.props.openDrawer,
+                })}>
+                    <NavbarUserMenu anchorEl={this.state.anchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
+                        user={this.props.user} {...this.props} />
+                    <Toolbar>
+                        {/* <IconButton edge='start' className={clsx(classes.menuButton, this.props.openDrawer && classes.hide)}
                         onClick={this.props.toggleDrawer} color='inherit' aria-label='Menu'>
                         <MenuIcon />
                     </IconButton> */}
-                    <Typography variant='h6' noWrap>
-                        <Link to="/home"><img width="40%" src={logo} alt="bildit logo" /></Link>
-                    </Typography>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <IconButton
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={this.handleClick}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    </div>
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label='Show more'
-                            aria-controls='primary-search-account-menu'
-                            aria-haspopup='true'
-                            onClick={this.handleClick}
-                            color='inherit'
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </div>
-                </Toolbar>
-            </AppBar>);
+                        <Typography variant='h6' noWrap>
+                            <Link to="/home"><img width="40%" src={logo} alt="bildit logo" /></Link>
+                        </Typography>
+                        <div className={classes.nav}>
+                            <Button color="inherit" component={Link} to='/home' className={classes.navBtn}>Home</Button>
+                            <Button color="inherit" component={Link} to={`/user/${this.state.user._id}`} className={classes.navBtn}>Profile</Button>
+                            {this.AuthService.hasRoles(ROLES.ADMIN) && <Button color="inherit" component={Link} to={'/users'} className={classes.navBtn}>Users</Button>}
+                        </div>
+                        <div className={classes.grow} />
+                        <div className={classes.sectionDesktop}>
+                            <IconButton
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={this.handleClick}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                        </div>
+                        <div className={classes.sectionMobile}>
+                            <IconButton
+                                aria-label='Show more'
+                                aria-controls='primary-search-account-menu'
+                                aria-haspopup='true'
+                                onClick={this.handleClick}
+                                color='inherit'
+                            >
+                                <MoreIcon />
+                            </IconButton>
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                <BottomNavigation showLabels value={this.state.navValue} className={classes.bottomNav} onChange={this.setNavValue}>
+                    <BottomNavigationAction component={Link} className={classes.navBtn} to='/home' label="Home" value="home" icon={<HomeIcon />} />
+                    <BottomNavigationAction component={Link} className={classes.navBtn} to={`/user/${this.state.user._id}`} label="Profile" value="profile" icon={<AccountCircle />} />
+                    {this.AuthService.hasRoles(ROLES.ADMIN) && <BottomNavigationAction component={Link} className={classes.navBtn} to={'/users'} label="Users" value="users" icon={<PeopleIcon />} />}
+                </BottomNavigation>
+            </div>);
     }
 }
 
