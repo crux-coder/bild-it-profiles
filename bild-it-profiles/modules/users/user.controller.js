@@ -52,12 +52,18 @@ router.post('/login', (req, res) => {
             if (user.email === email) {
                 user.comparePassword(password, (err, result) => {
                     if (result) {
-                        let token = jwt.sign(user.toObject(),
-                            config.secret,
-                            {
-                                expiresIn: '1d'
-                            });
-                        res.json({ user, token });
+                        if (!user.approved) {
+                            res.status(412).json('Account not approved. Contact admins for your approval.');
+                        }
+                        else {
+
+                            let token = jwt.sign(user.toObject(),
+                                config.secret,
+                                {
+                                    expiresIn: '1d'
+                                });
+                            res.json({ user, token });
+                        }
                     }
                     else
                         res.status(403).json('Wrong username or password.');

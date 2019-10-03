@@ -46,7 +46,8 @@ const styles = theme => ({
     navBtn: {
         textDecoration: 'none',
         '&:hover': {
-            textDecoration: 'none'
+            textDecoration: 'none',
+            color: 'white'
         }
     },
     grow: {
