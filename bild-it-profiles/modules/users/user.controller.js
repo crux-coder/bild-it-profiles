@@ -1,31 +1,32 @@
 const router = require('express').Router();
 const User = require('./user.model');
 const UserService = require('./user.service');
+const ROLES = require('../../constants/roles');
 const jwt = require('jsonwebtoken');
 const config = require('../../security/config');
 const auth = require('../../middleware/auth');
 
-router.route('/').get(auth(), (req, res, next) => {
+router.get('/', auth(ROLES.ADMIN), (req, res, next) => {
     UserService.fetchUsers()
         .then(users => res.json(users))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').get(auth(), (req, res) => {
+router.get('/:id', auth(), (req, res) => {
     const opts = { id: req.params.id, populate: ['exercises'], lean: false }
     UserService.fetchUserById(opts)
         .then(user => res.json(user))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/').post((req, res) => {
+router.post('/', (req, res) => {
     UserService.createUser(req.body)
         .then((user) => res.json(user))
         .catch(err => res.status(400).json('Error: ' + err));
 
 });
 
-router.route('/login').post((req, res) => {
+router.post('/login', (req, res) => {
     const { email, password } = req.body;
     User.findOne({ email: email })
         .then(user => {

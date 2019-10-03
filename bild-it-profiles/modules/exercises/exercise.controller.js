@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const auth = require('../../middleware/auth');
+const ROLES = require('../../constants/roles');
 const ExerciseService = require('./exercise.service');
 
 router.get('/', auth(), (req, res) => {
@@ -11,12 +12,12 @@ router.get('/', auth(), (req, res) => {
 });
 
 
-router.route('/').post(auth(), (req, res) => {
+router.post('/', auth(), (req, res) => {
     const exercise = ExerciseService.createExercise(req.body);
     exercise.then(exercise => res.json(exercise));
 });
 
-router.route('/:id').get(auth(), (req, res) => {
+router.get('/:id', auth(), (req, res) => {
     const opts = { id: req.params.id, populate: [{ path: 'user', select: 'firstName lastName fullName' }], lean: false }
     var exercise = ExerciseService.fetchExerciseById(opts);
     exercise.then(exercise => {
@@ -24,12 +25,12 @@ router.route('/:id').get(auth(), (req, res) => {
     });
 });
 
-router.route('/:id').delete(auth(), (req, res) => {
+router.delete('/:id', auth(ROLES.ADMIN), (req, res) => {
     const exercise = ExerciseService.deleteExerciseById(req.params.id);
     exercise.then(exercise => { res.json(exercise) });
 });
 
-router.route('/update/:id').post(auth(), (req, res) => {
+router.post('/update/:id', auth(ROLES.ADMIN), (req, res) => {
     ExerciseService.updateExercise(req.body)
         .then(exercise => {
             res.json(exercise)
