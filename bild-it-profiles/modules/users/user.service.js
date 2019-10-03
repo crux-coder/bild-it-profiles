@@ -14,7 +14,7 @@ function fetchUserById({ id = {}, populate = [], lean = true } = {}) {
 }
 
 function createUser(payload = {}) {
-    let newUser = new User({ ...payload });
+    const newUser = new User({ ...payload });
     return newUser.save();
 }
 

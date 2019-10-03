@@ -3,15 +3,15 @@ const User = require('./user.model');
 const UserService = require('./user.service');
 const jwt = require('jsonwebtoken');
 const config = require('../../security/config');
-const auth = require('../../security/token.utils');
+const auth = require('../../middleware/auth');
 
-router.route('/').get(auth, (req, res) => {
+router.route('/').get(auth(), (req, res, next) => {
     UserService.fetchUsers()
         .then(users => res.json(users))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').get(auth, (req, res) => {
+router.route('/:id').get(auth(), (req, res) => {
     const opts = { id: req.params.id, populate: ['exercises'], lean: false }
     UserService.fetchUserById(opts)
         .then(user => res.json(user))
