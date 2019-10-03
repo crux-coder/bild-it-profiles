@@ -88,17 +88,22 @@ class ExercisesList extends Component {
 
     postComment() {
         const user = this.AuthService.getProfile();
+        const exercise = this.state.exercises.find(exercise => exercise._id == this.state.exerciseId);
         const comment = {
-            user: user._id,
+            user: user,
             comment: this.state.comment,
-            exercise: this.state.exerciseId
+            exercise: exercise
         };
-        console.log(comment)
+
         this.AuthService.fetch('/comments', {
             method: 'POST',
             data: JSON.stringify(comment)
         }).then(() => {
             Alert.success('Comment successfully posted.');
+            exercise.comments.push(comment);
+            this.setState({
+                exercises: this.state.exercises
+            })
             this.toggleCommentDialog();
         });
     }
@@ -135,23 +140,9 @@ class ExercisesList extends Component {
                     </Typography>
                     <hr />
                 </div>
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Date</TableCell>
-                                <TableCell align="left">Trainee</TableCell>
-                                <TableCell align="left">Description</TableCell>
-                                <TableCell align="left">Duration (min)</TableCell>
-                                {this.AuthService.hasRoles(ROLES.ADMIN) && <TableCell align="center">Actions</TableCell>}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.exerciseList()}
-                        </TableBody>
-                    </Table>
-                </Paper>
-
+                <div>
+                    {this.exerciseList()}
+                </div>
                 <Dialog open={this.state.open} onClose={this.toggleCommentDialog} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Comment</DialogTitle>
                     <DialogContent>
