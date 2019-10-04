@@ -1,10 +1,10 @@
 
 const io = require('socket.io')();
 
-io.of('/notifications')
+const notification = io.of('/notifications')
     .on('connection', function (socket) {
         socket.on('SEND_NOTIFICATION', function (data) {
-            io.emit('RECIEVE_NOTIFICATION', data);
+            notification.emit('RECIEVE_NOTIFICATION', data);
         })
     });
 
