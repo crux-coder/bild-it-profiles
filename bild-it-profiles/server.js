@@ -27,7 +27,7 @@ connection.once('open', () => {
 
 const exerciseRouter = require('./modules/exercises/exercise.controller');
 const userRouter = require('./modules/users/user.controller');
-const commentRouter = require('./modules/commnets/comment.controller');
+const commentRouter = require('./modules/comments/comment.controller');
 
 app.use('/v1/api/exercises', exerciseRouter);
 app.use('/v1/api/users', userRouter);
