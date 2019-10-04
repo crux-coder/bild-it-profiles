@@ -13,6 +13,11 @@ const ExerciseSchema = new Schema({
         timestamps: true,
     });
 
+ExerciseSchema.virtual('comments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'exercise'
+});
 const Exercise = mongoose.model('Exercise', ExerciseSchema);
 
 module.exports = Exercise;

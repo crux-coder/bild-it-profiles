@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import AddBox from '@material-ui/icons/AddBox';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -40,18 +34,22 @@ class ExercisesList extends Component {
         super(props);
         this.state = {
             user: props.user,
-            exercises: []
+            exercises: [],
+            commentText: ''
         };
 
         this.AuthService = new AuthService();
-        this.deleteExercise = this.deleteExercise.bind(this)
+        this.deleteExercise = this.deleteExercise.bind(this);
     }
 
     componentDidMount() {
         this.AuthService.fetch(`/exercises`, { method: 'GET' })
             .then(res => {
                 this.setState({
-                    exercises: res.data
+                    exercises: res.data,
+                    open: false,
+                    exerciseId: '',
+                    commentText: ''
                 })
             })
             .catch((error) => {
@@ -73,7 +71,15 @@ class ExercisesList extends Component {
 
     exerciseList() {
         return this.state.exercises ? this.state.exercises.map(currentexercise => {
-            return <Exercise printUser={true} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+            return <Exercise
+                postComment={this.postComment}
+                comment={this.state.comment}
+                handleCommentChange={this.handleCommentChange}
+                printUser={true}
+                toggleCommentDialog={this.toggleCommentDialog}
+                exercise={currentexercise}
+                deleteExercise={this.deleteExercise}
+                key={currentexercise._id} />;
         }) : '';
     }
 
@@ -92,23 +98,10 @@ class ExercisesList extends Component {
                     </Typography>
                     <hr />
                 </div>
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Date</TableCell>
-                                <TableCell align="left">Trainee</TableCell>
-                                <TableCell align="left">Description</TableCell>
-                                <TableCell align="left">Duration (min)</TableCell>
-                                {this.AuthService.hasRoles(ROLES.ADMIN) && <TableCell align="center">Actions</TableCell>}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.exerciseList()}
-                        </TableBody>
-                    </Table>
-                </Paper>
-            </div >
+                <div>
+                    {this.exerciseList()}
+                </div>
+            </div>
         )
     }
 }
