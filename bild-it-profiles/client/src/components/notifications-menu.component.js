@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { formatDateFull } from '../utils/date-formatter';
+import { formatDate } from '../utils/date-formatter';
 
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
@@ -20,12 +20,12 @@ const styles = theme => ({
     },
     inline: {
         display: 'inline',
-    },
+    }
 });
 
 class NotificationsMenu extends Component {
     render() {
-        const { classes } = this.props;
+        const { classes, notifications } = this.props;
         return (
             <Menu
                 id='notifications-menu'
@@ -37,53 +37,27 @@ class NotificationsMenu extends Component {
                 getContentAnchorEl={null}>
                 <MenuItem disabled>Notifications</MenuItem>
                 <List className={classes.root}>
-                    <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                            <Avatar className={classes.avatar} alt="Admin Adminovic">
-                                A
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary="Admin Adminovic"
-                            secondary={
-                                <React.Fragment>
-                                    {" — Made edits to his post."}
-                                </React.Fragment>
-                            }
-                        />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                    <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                            <Avatar className={classes.avatar} alt="Dejan Radeljic">
-                                D
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary="Dejan Radeljic"
-                            secondary={
-                                <React.Fragment>
-                                    {" — Has commented on your post."}
-                                </React.Fragment>
-                            }
-                        />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                    <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                            <Avatar className={classes.avatar} alt="Jasmin Mustafic">
-                                J
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary="Jasmin Mustafic"
-                            secondary={
-                                <React.Fragment>
-                                    {' — Has posted to his timewall.'}
-                                </React.Fragment>
-                            }
-                        />
-                    </ListItem>
+                    {notifications ? notifications.map(notification => {
+                        return <React.Fragment>
+                            <ListItem alignItems="flex-start">
+                                <ListItemAvatar>
+                                    <Avatar className={classes.avatar} alt="Admin Adminovic">
+                                        {notification.who.charAt(0)}
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Admin Adminovic"
+                                    secondary={
+                                        <React.Fragment>
+                                            {`${notification.what}  — ${formatDate(notification.when)}`}
+                                        </React.Fragment>
+                                    }
+                                />
+                            </ListItem>
+                            <Divider variant="inset" component="li" />
+                        </React.Fragment>
+                    }) : 'No new notifications.'
+                    }
                 </List>
             </Menu>
         )

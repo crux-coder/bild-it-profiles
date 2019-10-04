@@ -16,9 +16,12 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PeopleIcon from '@material-ui/icons/PeopleAlt';
+
+import io from 'socket.io-client';
 import Auth from '../utils/auth-service';
 import ROLES from '../constants/roles';
 
@@ -133,13 +136,30 @@ class AppNavbar extends Component {
             userAnchorEl: null,
             notifAnchorEl: null,
             openDrawer: false,
-            navValue: 'home'
+            navValue: 'home',
+            notifications: []
         };
+
+        this.socket = io('192.168.1.7:5000/notifications');
         this.AuthService = new Auth();
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
         this.setNavValue = this.setNavValue.bind(this);
+        this.sendNotification = this.sendNotification.bind(this);
+        this.receiveNotification = this.receiveNotification.bind(this);
+        this.socket.on('RECIEVE_NOTIFICATION', this.receiveNotification)
+    }
+
+    sendNotification() {
+        this.socket.emit('SEND_NOTIFICATION', { who: 'Jasmin Mustafic', what: 'Has posted on your timeline.', when: new Date() });
+    }
+
+    receiveNotification(data) {
+        this.state.notifications.unshift(data);
+        this.setState({
+            notifications: this.state.notifications
+        });
     }
 
     handleClick(event) {
@@ -175,11 +195,15 @@ class AppNavbar extends Component {
                 <AppBar className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.props.openDrawer,
                 })}>
-                    <NavbarUserMenu anchorEl={this.state.userAnchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
+                    <NavbarUserMenu
+                        anchorEl={this.state.userAnchorEl}
+                        handleClose={this.handleClose}
+                        handleLogout={this.props.logout}
                         user={this.props.user} {...this.props} />
                     <NavbarNotificationsMenu
                         anchorEl={this.state.notifAnchorEl}
                         handleClose={this.handleClose}
+                        notifications={this.state.notifications}
                         user={this.props.user} {...this.props} />
                     <Toolbar>
                         <Typography variant='h6' noWrap>
@@ -204,9 +228,9 @@ class AppNavbar extends Component {
                             <IconButton
                                 id="notif-menu"
                                 onClick={this.handleClick} aria-label="show new notifications" color="inherit">
-                                {/* <Badge badgeContent={11} color="secondary"> */}
-                                <NotificationsIcon />
-                                {/* </Badge> */}
+                                <Badge badgeContent={this.state.notifications.length} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
                             </IconButton>
                             <IconButton
                                 id="user-menu"
@@ -221,6 +245,14 @@ class AppNavbar extends Component {
                         </div>
                         <div className={classes.sectionMobile}>
                             <IconButton
+                                id="notif-menu"
+                                onClick={this.handleClick} aria-label="show new notifications" color="inherit">
+                                <Badge badgeContent={this.state.notifications.length} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                            <IconButton
+                                id="user-menu"
                                 aria-label='Show more'
                                 aria-controls='primary-search-account-menu'
                                 aria-haspopup='true'
@@ -231,6 +263,9 @@ class AppNavbar extends Component {
                             </IconButton>
                         </div>
                     </Toolbar>
+                    {/* <Button variant="contained" onClick={this.sendNotification}>
+                        Default
+                    </Button> */}
                 </AppBar>
                 <BottomNavigation showLabels value={this.state.navValue} className={classes.bottomNav} onChange={this.setNavValue}>
                     <BottomNavigationAction component={Link} className={classes.navBtn} to='/home' label="Home" value="home" icon={<HomeIcon />} />
