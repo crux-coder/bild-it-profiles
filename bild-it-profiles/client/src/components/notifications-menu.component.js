@@ -46,7 +46,7 @@ class NotificationsMenu extends Component {
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary="Admin Adminovic"
+                                    primary={notification.who}
                                     secondary={
                                         <React.Fragment>
                                             {`${notification.what}  — ${formatDate(notification.when)}`}

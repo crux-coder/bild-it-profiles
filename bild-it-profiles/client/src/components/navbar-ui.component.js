@@ -152,7 +152,7 @@ class AppNavbar extends Component {
     }
 
     sendNotification() {
-        this.socket.emit('SEND_NOTIFICATION', { who: 'Jasmin Mustafic', what: 'Has posted on your timeline.', when: new Date() });
+        this.socket.emit('SEND_NOTIFICATION', { who: this.state.user.fullName, what: 'Sends you a notification.', when: new Date() });
     }
 
     receiveNotification(data) {
