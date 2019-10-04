@@ -11,10 +11,12 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { fade } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
 import HomeIcon from '@material-ui/icons/Home';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import PeopleIcon from '@material-ui/icons/PeopleAlt';
 import Auth from '../utils/auth-service';
 import ROLES from '../constants/roles';
@@ -44,6 +46,7 @@ const styles = theme => ({
 
     },
     navBtn: {
+        display: 'inline-block',
         textDecoration: 'none',
         '&:hover': {
             textDecoration: 'none',
@@ -184,6 +187,9 @@ const styles = theme => ({
     },
     moveSearch: {
         marginLeft: 20
+    },
+    iconLeft: {
+        marginRight: '0.2em'
     }
 });
 
@@ -242,20 +248,30 @@ class AppNavbar extends Component {
                     <NavbarUserMenu anchorEl={this.state.anchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
                         user={this.props.user} {...this.props} />
                     <Toolbar>
-                        {/* <IconButton edge='start' className={clsx(classes.menuButton, this.props.openDrawer && classes.hide)}
-                        onClick={this.props.toggleDrawer} color='inherit' aria-label='Menu'>
-                        <MenuIcon />
-                    </IconButton> */}
                         <Typography variant='h6' noWrap>
                             <Link to="/home"><img width="40%" src={logo} alt="bildit logo" /></Link>
                         </Typography>
                         <div className={classes.nav}>
-                            <Button color="inherit" component={Link} to='/home' className={classes.navBtn}>Home</Button>
-                            <Button color="inherit" component={Link} to={`/user/${this.state.user._id}`} className={classes.navBtn}>Profile</Button>
-                            {this.AuthService.hasRoles(ROLES.ADMIN) && <Button color="inherit" component={Link} to={'/all-users'} className={classes.navBtn}>Users</Button>}
+                            <MenuItem component={Link} to='/home' className={classes.navBtn}>
+                                <HomeIcon className={classes.iconLeft} />
+                                Home
+                            </MenuItem>
+                            <MenuItem component={Link} to={`/user/${this.state.user._id}`} className={classes.navBtn}>
+                                <AccountCircle className={classes.iconLeft} />
+                                Profile
+                            </MenuItem>
+                            <MenuItem component={Link} to={'/all-users'} className={classes.navBtn}>
+                                <PeopleIcon className={classes.iconLeft} />
+                                Users
+                            </MenuItem>
                         </div>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
+                            <IconButton onClick={this.handleClick} aria-label="show new notifications" color="inherit">
+                                <Badge badgeContent={11} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
                             <IconButton
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
