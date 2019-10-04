@@ -11,6 +11,13 @@ router.get('/', auth(), (req, res) => {
     });
 });
 
+router.get('/:userId', auth(), (req, res) => {
+    const opts = { query: { user: req.params.userId }, populate: [{ path: 'user', select: 'firstName lastName fullName' }, { path: 'comments', populate: { path: 'user', select: 'firstName lastName fullName' } }], lean: false }
+    const exercises = ExerciseService.fetchExercises(opts);
+    exercises.then(exercises => {
+        res.json(exercises)
+    });
+});
 
 router.post('/', auth(), (req, res) => {
     const exercise = ExerciseService.createExercise(req.body);

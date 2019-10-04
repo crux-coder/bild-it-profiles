@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import Exercise from './exercise.component';
 import Alert from 'react-s-alert';
 import { Link } from 'react-router-dom';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
 import AddBox from '@material-ui/icons/AddBox';
-import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import ROLES from '../constants/roles';
@@ -44,8 +38,6 @@ class ViewUser extends Component {
         super(props);
 
         this.state = {
-            currentUser: props.user,
-            user: null
         }
 
         this.AuthService = new AuthService();
@@ -53,29 +45,24 @@ class ViewUser extends Component {
     }
 
     componentDidMount() {
-        this.AuthService.fetch(`/users/${this.props.match.params.id}`, {
+        this.AuthService.fetch(`/exercises/${this.props.match.params.id}`, {
             method: 'GET'
+        }).then(res => {
+            this.setState({
+                exercises: res.data,
+                user: this.AuthService.getProfile()
+            })
+        }).catch((error) => {
+            console.log(error);
         })
-            .then(res => {
-                if (res.status === 200)
-                    this.setState({
-                        user: res.data
-                    })
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
     }
 
     deleteExercise(id) {
         this.AuthService.fetch(`/exercises/${id}`, {
             method: 'DELETE'
-        })
-            .then(res => {
-                if (res.status === 200)
-                    Alert.success('Exercise successfully deleted.');
-            });
+        }).then(() => {
+            Alert.success('Exercise successfully deleted.');
+        });
 
         const exercises = this.state.user.exercises.filter(el => el._id !== id)
         const user = this.state.user;
@@ -86,9 +73,12 @@ class ViewUser extends Component {
     }
 
     exerciseList() {
-        if (this.state.user)
-            return this.state.user.exercises ? this.state.user.exercises.map(currentexercise => {
-                return <Exercise user={this.state.currentUser} exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id} />;
+        if (this.state.exercises)
+            return this.state.exercises ? this.state.exercises.map(currentexercise => {
+                return <Exercise
+                    exercise={currentexercise}
+                    deleteExercise={this.deleteExercise}
+                    key={currentexercise._id} />;
             }) : '';
     }
 
@@ -114,21 +104,9 @@ class ViewUser extends Component {
                     </Typography>
                     <hr />
                 </div>
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Date</TableCell>
-                                <TableCell align="left">Description</TableCell>
-                                <TableCell align="left">Duration (min)</TableCell>
-                                {this.AuthService.hasRoles(ROLES.ADMIN) && <TableCell align="center">Actions</TableCell>}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.exerciseList()}
-                        </TableBody>
-                    </Table>
-                </Paper>
+                <div>
+                    {this.exerciseList()}
+                </div>
             </div>
         )
     }

@@ -14,7 +14,7 @@ router.get('/', auth(ROLES.ADMIN), (req, res, next) => {
 });
 
 router.get('/:id', auth(), (req, res) => {
-    const opts = { id: req.params.id, populate: ['exercises'], lean: false }
+    const opts = { id: req.params.id, lean: false }
     UserService.fetchUserById(opts)
         .then(user => res.json(user))
         .catch(err => res.status(400).json('Error: ' + err));

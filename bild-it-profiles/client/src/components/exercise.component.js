@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import { formatDate } from '../utils/date-formatter';
+import { formatDateFull } from '../utils/date-formatter';
 
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -15,14 +14,12 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import CommentIcon from '@material-ui/icons/AddComment';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Alert from 'react-s-alert';
+import Comment from './comment.component';
+import NewComment from './new-comment.component';
 
 import ROLES from '../constants/roles';
 import AuthService from '../utils/auth-service';
@@ -35,7 +32,7 @@ const styles = theme => ({
     },
     expand: {
         transform: 'rotate(0deg)',
-        marginLeft: 'auto',
+        cursor: 'pointer',
         transition: theme.transitions.create('transform', {
             duration: theme.transitions.duration.shortest,
         }),
@@ -53,11 +50,16 @@ const styles = theme => ({
     inline: {
         display: 'inline',
     },
+    cursorPointer: {
+        cursor: 'pointer',
+    },
     commentSection: {
         backgroundColor: '#FEFEFE',
-        //         -webkit-box-shadow: inset 2px 2px 5px 0px rgba(0,0,0,0.75);
-        // -moz-box-shadow: inset 2px 2px 5px 0px rgba(0,0,0,0.75);
         boxShadow: 'inset 0px 1px 3px 0px rgba(0,0,0,0.45)'
+    },
+    showCommentsBtn: {
+        marginLeft: 'auto',
+        cursor: 'pointer',
     },
 });
 
@@ -66,11 +68,16 @@ class Exercise extends Component {
 
     constructor(props) {
         super(props);
-        this.AuthService = new AuthService();
         this.state = {
-            expanded: false
+            expanded: false,
+            exercise: props.exercise,
+            comments: props.exercise.comments,
+            newCommentText: ''
         }
+        this.AuthService = new AuthService();
         this.handleExpandClick = this.handleExpandClick.bind(this);
+        this.handleCommentTextChange = this.handleCommentTextChange.bind(this);
+        this.postComment = this.postComment.bind(this);
     }
 
     handleExpandClick() {
@@ -79,15 +86,45 @@ class Exercise extends Component {
         })
     }
 
+    handleCommentTextChange(e) {
+        this.setState({
+            newCommentText: e.target.value
+        })
+    }
+
+    postComment() {
+        const user = this.AuthService.getProfile();
+        const exercise = this.state.exercise;
+        const comment = {
+            user: user,
+            comment: this.state.newCommentText,
+            exercise: exercise
+        };
+
+        this.AuthService.fetch('/comments', {
+            method: 'POST',
+            data: JSON.stringify(comment)
+        }).then(() => {
+            Alert.success('Comment successfully posted.');
+            exercise.comments.push(comment);
+            this.setState({
+                exercise: exercise,
+                newCommentText: '',
+            })
+        });
+    }
+
     render() {
         const { classes } = this.props;
+        const { exercise, comments } = this.state;
         const props = this.props;
+
         return (
             <Card className={classes.card}>
                 <CardHeader
                     avatar={
                         <Avatar aria-label="user" className={classes.avatar}>
-                            {props.exercise.user.firstName.charAt(0)}
+                            {exercise.user.firstName.charAt(0)}
                         </Avatar>
                     }
                     action={
@@ -95,67 +132,50 @@ class Exercise extends Component {
                             <MoreVertIcon />
                         </IconButton>
                     }
-                    title={props.exercise.user.fullName}
-                    subheader={formatDate(props.exercise.date)}
+                    title={exercise.user.fullName}
+                    subheader={formatDateFull(exercise.date)}
                 />
                 <CardContent>
                     <Typography variant="body1" color="textPrimary" component="p">
-                        {props.exercise.description}
+                        {exercise.description}
                     </Typography>
                 </CardContent>
-                <CardActions >
+                <CardActions>
                     <IconButton aria-label="add to favorites">
                         <FavoriteIcon />
                     </IconButton>
-                    <IconButton aria-label="Comment">
-                        <CommentIcon onClick={() => props.toggleCommentDialog(props.exercise._id)} />
-                    </IconButton>
-                    <IconButton
-                        className={clsx(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
+                    <Typography
+                        component="span"
+                        variant="body2"
                         onClick={this.handleExpandClick}
                         aria-expanded={this.state.expanded}
                         aria-label="show more"
+                        color="textSecondary"
+                        className={classes.showCommentsBtn}
                     >
-                        <ExpandMoreIcon />
-                    </IconButton>
+                        {this.state.expanded ? 'Hide Comments' : 'Show Comments'}
+                        <ExpandMoreIcon className={clsx(classes.expand, {
+                            [classes.expandOpen]: this.state.expanded,
+                        })} />
+                    </Typography>
                 </CardActions>
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                     <CardContent className={classes.commentSection}>
                         <List className={classes.root}>
-                            {props.exercise.comments.map(comment => {
-                                return (
-                                    <React.Fragment>
-                                        <ListItem alignItems="flex-start">
-                                            <ListItemAvatar>
-                                                <Avatar aria-label="user" className={classes.avatar}>
-                                                    {comment.user.firstName.charAt(0)}
-                                                </Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                primary={comment.user.fullName}
-                                                secondary={
-                                                    <React.Fragment>
-                                                        <Typography
-                                                            component="span"
-                                                            variant="body2"
-                                                            className={classes.inline}
-                                                            color="textPrimary"
-                                                        >
-                                                            {comment.comment}
-                                                        </Typography>
-                                                        {`  —${comment.createdAt ? formatDate(comment.createdAt) : 'Just now.'}`}
-                                                    </React.Fragment>
-                                                }
-                                            />
-                                        </ListItem>
-                                        <Divider variant="inset" component="li" />
-                                    </React.Fragment>)
-                            })
-                            }
+                            {comments.length ? comments.map(comment => {
+                                return <Comment comment={comment} />
+                            }) : <Typography
+                                component="span"
+                                variant="body2"
+                                aria-label="show more"
+                                color="textSecondary"
+                            >Be first to comment.</Typography>}
+                            <NewComment
+                                newCommentText={this.state.newCommentText}
+                                exercise={exercise}
+                                handleCommentTextChange={this.handleCommentTextChange}
+                                postComment={this.postComment} />
                         </List>
-
                     </CardContent>
                 </Collapse>
             </Card>
