@@ -2,13 +2,13 @@ const Exercise = require('./exercise.model');
 
 function fetchExercises({ query = {}, populate = [], lean = true } = {}) {
     const promise = Exercise.find({ ...query });
-    const populatedPromise = promise.populate(...populate);
+    const populatedPromise = promise.populate(populate);
     return lean ? populatedPromise.lean() : populatedPromise;
 };
 
 function fetchExerciseById({ id = {}, populate = [], lean = true } = {}) {
     const promise = Exercise.findById(id);
-    const populatedPromise = promise.populate(...populate);
+    const populatedPromise = promise.populate(populate);
     return lean ? populatedPromise.lean() : populatedPromise;
 }
 
