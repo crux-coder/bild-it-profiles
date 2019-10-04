@@ -6,6 +6,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import NavbarUserMenu from './user-menu.component';
+import NavbarNotificationsMenu from './notifications-menu.component';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -24,7 +25,6 @@ import ROLES from '../constants/roles';
 import logo from '../images/bildit.png';
 import '../App.css';
 
-const drawerWidth = 260;
 const styles = theme => ({
     nav: {
         display: 'none',
@@ -118,76 +118,6 @@ const styles = theme => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-    },
-    drawerOpen: {
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerClose: {
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        overflowX: 'hidden',
-        width: theme.spacing(7) + 1,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(7) + 1,
-        },
-    },
-    drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 8px',
-        ...theme.mixins.toolbar,
-        justifyContent: 'flex-end'
-    },
-    topSeparator: {
-        height: '5em'
-    },
-    content: {
-        flexGrow: 1,
-        paddingLeft: theme.spacing(10),
-        paddingRight: theme.spacing(10),
-        paddingTop: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: theme.spacing(7) + 1,
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(7) + 1,
-        },
-    },
-    contentShift: {
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: drawerWidth,
-    },
-    nested: {
-        paddingLeft: theme.spacing(4),
-    },
-    moveSearch: {
-        marginLeft: 20
-    },
     iconLeft: {
         marginRight: '0.2em'
     }
@@ -200,7 +130,8 @@ class AppNavbar extends Component {
         this.state = {
             user: props.user,
             menu: false,
-            anchorEl: null,
+            userAnchorEl: null,
+            notifAnchorEl: null,
             openDrawer: false,
             navValue: 'home'
         };
@@ -208,7 +139,6 @@ class AppNavbar extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
-        this.toggleDrawer = this.toggleDrawer.bind(this);
         this.setNavValue = this.setNavValue.bind(this);
     }
 
@@ -221,13 +151,14 @@ class AppNavbar extends Component {
     }
 
     setAnchorEl(anchorEl) {
-        this.setState({ anchorEl: anchorEl })
-    }
-
-    toggleDrawer() {
-        this.setState({
-            openDrawer: !this.state.openDrawer
-        })
+        if (!anchorEl) {
+            this.setState({ userAnchorEl: anchorEl })
+            this.setState({ notifAnchorEl: anchorEl })
+        }
+        else if (anchorEl.id === 'user-menu')
+            this.setState({ userAnchorEl: anchorEl })
+        else if (anchorEl.id === 'notif-menu')
+            this.setState({ notifAnchorEl: anchorEl })
     }
 
     setNavValue = (event, newValue) => {
@@ -237,7 +168,6 @@ class AppNavbar extends Component {
     };
 
     render() {
-        //TODO: Refactor this render function
         const { classes } = this.props;
 
         return (
@@ -245,7 +175,11 @@ class AppNavbar extends Component {
                 <AppBar className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.props.openDrawer,
                 })}>
-                    <NavbarUserMenu anchorEl={this.state.anchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
+                    <NavbarUserMenu anchorEl={this.state.userAnchorEl} handleClose={this.handleClose} handleLogout={this.props.logout}
+                        user={this.props.user} {...this.props} />
+                    <NavbarNotificationsMenu
+                        anchorEl={this.state.notifAnchorEl}
+                        handleClose={this.handleClose}
                         user={this.props.user} {...this.props} />
                     <Toolbar>
                         <Typography variant='h6' noWrap>
@@ -267,12 +201,15 @@ class AppNavbar extends Component {
                         </div>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
-                            <IconButton onClick={this.handleClick} aria-label="show new notifications" color="inherit">
-                                <Badge badgeContent={11} color="secondary">
-                                    <NotificationsIcon />
-                                </Badge>
+                            <IconButton
+                                id="notif-menu"
+                                onClick={this.handleClick} aria-label="show new notifications" color="inherit">
+                                {/* <Badge badgeContent={11} color="secondary"> */}
+                                <NotificationsIcon />
+                                {/* </Badge> */}
                             </IconButton>
                             <IconButton
+                                id="user-menu"
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
@@ -300,7 +237,7 @@ class AppNavbar extends Component {
                     <BottomNavigationAction component={Link} className={classes.navBtn} to={`/user/${this.state.user._id}`} label="Profile" value="profile" icon={<AccountCircle />} />
                     {this.AuthService.hasRoles(ROLES.ADMIN) && <BottomNavigationAction component={Link} className={classes.navBtn} to={'/all-users'} label="Users" value="users" icon={<PeopleIcon />} />}
                 </BottomNavigation>
-            </div>);
+            </div >);
     }
 }
 
