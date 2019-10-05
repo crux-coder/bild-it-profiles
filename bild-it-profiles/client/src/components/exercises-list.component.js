@@ -37,10 +37,11 @@ class ExercisesList extends Component {
             exercises: [],
             commentText: ''
         };
-
+        this.socket = props.socket;
         this.AuthService = new AuthService();
         this.deleteExercise = this.deleteExercise.bind(this);
     }
+
 
     componentDidMount() {
         this.AuthService.fetch(`/exercises`, { method: 'GET' })
@@ -72,6 +73,7 @@ class ExercisesList extends Component {
     exerciseList() {
         return this.state.exercises ? this.state.exercises.map(currentexercise => {
             return <Exercise
+                socket={this.socket}
                 postComment={this.postComment}
                 comment={this.state.comment}
                 handleCommentChange={this.handleCommentChange}

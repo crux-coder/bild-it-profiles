@@ -21,7 +21,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PeopleIcon from '@material-ui/icons/PeopleAlt';
 
-import io from 'socket.io-client';
 import Auth from '../utils/auth-service';
 import ROLES from '../constants/roles';
 
@@ -137,30 +136,18 @@ class AppNavbar extends Component {
             notifAnchorEl: null,
             openDrawer: false,
             navValue: 'home',
-            notifications: []
+            notifications: props.notifications
         };
 
-        this.socket = io('192.168.1.7:5000/notifications');
+
         this.AuthService = new Auth();
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
         this.setNavValue = this.setNavValue.bind(this);
-        this.sendNotification = this.sendNotification.bind(this);
-        this.receiveNotification = this.receiveNotification.bind(this);
-        this.socket.on('RECIEVE_NOTIFICATION', this.receiveNotification)
     }
 
-    sendNotification() {
-        this.socket.emit('SEND_NOTIFICATION', { who: this.state.user.fullName, what: 'Sends you a notification.', when: new Date() });
-    }
 
-    receiveNotification(data) {
-        this.state.notifications.unshift(data);
-        this.setState({
-            notifications: this.state.notifications
-        });
-    }
 
     handleClick(event) {
         this.setAnchorEl(event.currentTarget);

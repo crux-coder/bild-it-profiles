@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+import io from 'socket.io-client';
 import AuthService from './utils/auth-service';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,13 +25,24 @@ class App extends Component {
     super();
     this.state = {
       user: null,
-      loggedIn: false
+      loggedIn: false,
+      notifications: []
     }
 
     this.Auth = new AuthService();
 
+    this.socket = io('192.168.1.2:5000/notifications');
     this.loggedIn = this.loggedIn.bind(this);
     this.logout = this.logout.bind(this);
+    this.receiveNotification = this.receiveNotification.bind(this);
+    this.socket.on('RECIEVE_NOTIFICATION', this.receiveNotification);
+  }
+
+  receiveNotification(data) {
+    this.state.notifications.unshift(data);
+    this.setState({
+      notifications: this.state.notifications
+    });
   }
 
   componentDidMount() {
@@ -62,11 +75,11 @@ class App extends Component {
     return (
       <Router>
         <div className="container-flex" >
-          {this.state.loggedIn && <Navbar user={this.state.user} logout={this.logout} />}
+          {this.state.loggedIn && <Navbar notifications={this.state.notifications} user={this.state.user} logout={this.logout} />}
           <div className="container-fluid mt-5 pt-5">
             <Switch>
               <Route exact path='/' render={(props) => <Login {...props} loggedIn={this.loggedIn} />} />
-              <PrivateRoute exact path="/home" user={this.state.user} loggedIn={this.state.loggedIn} component={ExercisesList} />
+              <PrivateRoute exact socket={this.socket} path="/home" user={this.state.user} loggedIn={this.state.loggedIn} component={ExercisesList} />
               <PrivateRoute exact path="/edit/:id" user={this.state.user} loggedIn={this.state.loggedIn} component={EditExercise} />
               <PrivateRoute exact path="/create" user={this.state.user} loggedIn={this.state.loggedIn} component={CreateExercise} />
               <PrivateRoute exact path="/user/register" user={this.state.user} loggedIn={this.state.loggedIn} component={RegisterUser} />
