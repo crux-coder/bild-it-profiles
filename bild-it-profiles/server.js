@@ -44,6 +44,6 @@ app.get('*', (req, res) => {
 const server = app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
-const notificationSocket = require('./modules/notifications/notification-socket');
+const notificationSocket = require('./modules/notifications/notification.socket');
 notificationSocket.attach(server);
 

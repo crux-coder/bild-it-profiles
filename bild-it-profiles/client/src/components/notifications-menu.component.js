@@ -42,14 +42,14 @@ class NotificationsMenu extends Component {
                             <ListItem alignItems="flex-start">
                                 <ListItemAvatar>
                                     <Avatar className={classes.avatar} alt="Admin Adminovic">
-                                        {notification.who.charAt(0)}
+                                        {notification.senderName.charAt(0)}
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={notification.who}
+                                    primary={notification.senderName}
                                     secondary={
                                         <React.Fragment>
-                                            {`${notification.what}  — ${formatDate(notification.when)}`}
+                                            {`${notification.content}  — ${formatDate(notification.createdAt)}`}
                                         </React.Fragment>
                                     }
                                 />
