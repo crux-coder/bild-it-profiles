@@ -1,12 +1,17 @@
 
 const io = require('socket.io')();
+const UserService = require('../users/user.service');
 
-const notification = io.of('/notifications')
-    .on('connection', function (socket) {
-        console.log(socket.id)
-        socket.on('SEND_NOTIFICATION', function (data) {
-            socket.broadcast.emit('RECIEVE_NOTIFICATION', data);
+io.on('connection', function (socket) {
+    socket.on('REGISTER_SOCKET', function (user) {
+        user.socketId = socket.id;
+        UserService.updateUser(user);
+    });
+    socket.on('SEND_NOTIFICATION', function (data) {
+        UserService.fetchUserById({ id: data.recieverId }).then(user => {
+            socket.broadcast.to(user.socketId).emit('RECIEVE_NOTIFICATION', data);
         })
     });
+});
 
 module.exports = io;

@@ -147,7 +147,7 @@ class Exercise extends Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton aria-label="add to favorites" onClick={() => this.sendNotification({ who: this.AuthService.getProfile().fullName, what: 'Just lilked your post cyka blyat!', when: new Date() })}>
+                    <IconButton aria-label="add to favorites" onClick={() => this.sendNotification({ recieverId: exercise.user._id, who: this.AuthService.getProfile().fullName, what: 'Just lilked your post!', when: new Date() })}>
                         <FavoriteIcon />
                     </IconButton>
                     <Typography

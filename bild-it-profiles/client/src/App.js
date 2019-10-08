@@ -18,6 +18,7 @@ import ViewUsers from './components/view-users.component';
 import Login from './components/login-user.component';
 import PrivateRoute from './components/private-route.component';
 import Alert from 'react-s-alert';
+const HOST = window.location.origin;
 
 class App extends Component {
 
@@ -30,8 +31,7 @@ class App extends Component {
     }
 
     this.Auth = new AuthService();
-
-    this.socket = io('192.168.1.2:5000/notifications');
+    this.socket = io(HOST);
     this.loggedIn = this.loggedIn.bind(this);
     this.logout = this.logout.bind(this);
     this.receiveNotification = this.receiveNotification.bind(this);
@@ -50,8 +50,13 @@ class App extends Component {
       this.setState({
         user: this.Auth.getProfile(),
         loggedIn: true
-      })
+      });
+      this.registerSocket(this.Auth.getProfile());
     }
+  }
+
+  registerSocket(user) {
+    this.socket.emit('REGISTER_SOCKET', user);
   }
 
   loggedIn(state) {

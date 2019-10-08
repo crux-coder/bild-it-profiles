@@ -250,9 +250,6 @@ class AppNavbar extends Component {
                             </IconButton>
                         </div>
                     </Toolbar>
-                    <Button variant="contained" onClick={this.sendNotification}>
-                        Send notification
-                    </Button>
                 </AppBar>
                 <BottomNavigation showLabels value={this.state.navValue} className={classes.bottomNav} onChange={this.setNavValue}>
                     <BottomNavigationAction component={Link} className={classes.navBtn} to='/home' label="Home" value="home" icon={<HomeIcon />} />

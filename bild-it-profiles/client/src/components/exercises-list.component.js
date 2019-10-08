@@ -91,17 +91,19 @@ class ExercisesList extends Component {
         return (
             <div>
                 <div>
-                    <Fab color="primary" variant="extended" to="/create" aria-label="delete" className={classes.addButton} component={Link}>
+                    {/* <Fab color="primary" variant="extended" to="/create" aria-label="delete" className={classes.addButton} component={Link}>
                         New exercise log
                             <AddBox className="ml-3" />
                     </Fab>
                     <Typography className={classes.titleDiv} variant="h4" component="h3" style={{ overflow: 'hidden' }} display="block">
                         <span>Logged exercises</span>
-                    </Typography>
+                    </Typography>*/}
                     <hr />
                 </div>
                 <div>
-                    {this.exerciseList()}
+                    <div className="container">
+                        {this.exerciseList()}
+                    </div>
                 </div>
             </div>
         )
