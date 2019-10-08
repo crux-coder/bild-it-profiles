@@ -147,8 +147,6 @@ class AppNavbar extends Component {
         this.setNavValue = this.setNavValue.bind(this);
     }
 
-
-
     handleClick(event) {
         this.setAnchorEl(event.currentTarget);
     }
@@ -176,7 +174,7 @@ class AppNavbar extends Component {
 
     render() {
         const { classes } = this.props;
-
+        console.log(this.state.notifications.length);
         return (
             <div>
                 <AppBar className={clsx(classes.appBar, {
@@ -215,7 +213,7 @@ class AppNavbar extends Component {
                             <IconButton
                                 id="notif-menu"
                                 onClick={this.handleClick} aria-label="show new notifications" color="inherit">
-                                <Badge badgeContent={this.state.notifications.length} color="secondary">
+                                <Badge badgeContent={this.props.notifications.length} color="secondary">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>

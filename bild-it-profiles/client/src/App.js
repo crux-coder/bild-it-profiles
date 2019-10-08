@@ -35,13 +35,21 @@ class App extends Component {
     this.loggedIn = this.loggedIn.bind(this);
     this.logout = this.logout.bind(this);
     this.receiveNotification = this.receiveNotification.bind(this);
+    this.updateNotifications = this.updateNotifications.bind(this);
     this.socket.on('RECIEVE_NOTIFICATION', this.receiveNotification);
+    this.socket.on('UPDATE_NOTIFICATIONS', this.updateNotifications);
   }
 
   receiveNotification(data) {
     this.state.notifications.unshift(data);
     this.setState({
       notifications: this.state.notifications
+    });
+  }
+
+  updateNotifications(data) {
+    this.setState({
+      notifications: data
     });
   }
 

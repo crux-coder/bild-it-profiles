@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const NotificationSchema = new Schema({
     recieverId: { type: String, required: true, },
-    senderName: { type: String, required: true },
+    sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     content: { type: String, required: true },
     type: { type: String, required: true }
 }, {
