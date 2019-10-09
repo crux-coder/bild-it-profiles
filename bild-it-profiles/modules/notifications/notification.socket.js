@@ -11,7 +11,6 @@ io.on('connection', function (socket) {
         const opts = { query:{recieverId: user._id}, populate: { path: 'sender', select: 'firstName lastName' } };
         const notifications = NotificationService.fetchNotifications(opts);
         notifications.then(notifications => {
-            console.log(user.firstName)
             io.to(user.socketId).emit('UPDATE_NOTIFICATIONS', notifications);
         });
     });
