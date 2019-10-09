@@ -8,9 +8,10 @@ io.on('connection', function (socket) {
     socket.on('REGISTER_SOCKET', function (user) {
         user.socketId = socket.id;
         UserService.updateUser(user);
-        const opts = { recieverId: user._id, populate: { path: 'sender', select: 'firstName lastName' } };
+        const opts = { query:{recieverId: user._id}, populate: { path: 'sender', select: 'firstName lastName' } };
         const notifications = NotificationService.fetchNotifications(opts);
         notifications.then(notifications => {
+            console.log(user.firstName)
             io.to(user.socketId).emit('UPDATE_NOTIFICATIONS', notifications);
         });
     });
