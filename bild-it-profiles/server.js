@@ -27,11 +27,15 @@ connection.once('open', () => {
 
 const exerciseRouter = require('./modules/exercises/exercise.controller');
 const userRouter = require('./modules/users/user.controller');
-const commentRouter = require('./modules/commnets/comment.controller');
+const commentRouter = require('./modules/comments/comment.controller');
+const notificationRouter = require('./modules/notifications/notification.controller');
 
 app.use('/v1/api/exercises', exerciseRouter);
 app.use('/v1/api/users', userRouter);
 app.use('/v1/api/comments', commentRouter);
+app.use('/v1/api/notifications', notificationRouter);
+
+
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
@@ -39,7 +43,9 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
+const notificationSocket = require('./modules/notifications/notification.socket');
+notificationSocket.attach(server);
 

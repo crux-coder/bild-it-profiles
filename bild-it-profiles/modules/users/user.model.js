@@ -10,14 +10,15 @@ const UserSchema = new Schema({
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
     password: { type: String, required: true },
+    socketId: { type: String },
     dob: { type: Date, required: true },
     roles: { type: [String], default: ['USER'] },
     approved: { type: Boolean, default: false }
 }, {
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true },
-        timestamps: true,
-    });
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
+    timestamps: true,
+});
 
 UserSchema.virtual('exercises', {
     ref: 'Exercise',

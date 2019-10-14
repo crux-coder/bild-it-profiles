@@ -78,6 +78,12 @@ class Exercise extends Component {
         this.handleExpandClick = this.handleExpandClick.bind(this);
         this.handleCommentTextChange = this.handleCommentTextChange.bind(this);
         this.postComment = this.postComment.bind(this);
+        this.socket = props.socket;
+        this.sendNotification = this.sendNotification.bind(this);
+    }
+
+    sendNotification(notification) {
+        this.socket.emit('SEND_NOTIFICATION', notification);
     }
 
     handleExpandClick() {
@@ -89,7 +95,7 @@ class Exercise extends Component {
     handleCommentTextChange(e) {
         this.setState({
             newCommentText: e.target.value
-        })
+        });
     }
 
     postComment() {
@@ -141,7 +147,7 @@ class Exercise extends Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton aria-label="add to favorites">
+                    <IconButton aria-label="add to favorites" onClick={() => this.sendNotification({ recieverId: exercise.user._id, sender: this.AuthService.getProfile(), content: 'Just lilked your post!', type: 'LIKE',read: false })}>
                         <FavoriteIcon />
                     </IconButton>
                     <Typography
