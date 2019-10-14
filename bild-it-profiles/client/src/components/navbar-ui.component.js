@@ -145,6 +145,8 @@ class AppNavbar extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
         this.setNavValue = this.setNavValue.bind(this);
+        this.unreadNotifications = this.unreadNotifications.bind(this);
+        this.markNotificationsRead = this.markNotificationsRead.bind(this);
     }
 
     handleClick(event) {
@@ -162,8 +164,12 @@ class AppNavbar extends Component {
         }
         else if (anchorEl.id === 'user-menu')
             this.setState({ userAnchorEl: anchorEl })
-        else if (anchorEl.id === 'notif-menu')
-            this.setState({ notifAnchorEl: anchorEl })
+        else if (anchorEl.id === 'notif-menu') {
+            this.setState({
+                notifAnchorEl: anchorEl,
+            });
+            this.markNotificationsRead();
+        }
     }
 
     setNavValue = (event, newValue) => {
@@ -172,9 +178,29 @@ class AppNavbar extends Component {
         });
     };
 
+    markNotificationsRead() {
+        const notifications = this.props.notifications.filter(notification => {
+            var notRead = !notification.read;
+            if (notRead) {
+                notification.read = true;
+                return notRead;
+            }
+        });
+        if (notifications.length)
+            this.AuthService.fetch(`/notifications/update/`, { method: 'POST', data: JSON.stringify(notifications) })
+                .then(notifications => {
+                    this.setState({
+                        notifications: notifications
+                    })
+                }).catch(err => console.log(err));
+    };
+
+    unreadNotifications() {
+        return this.props.notifications.filter(notification => !notification.read).length;
+    };
+
     render() {
         const { classes } = this.props;
-        console.log(this.state.notifications.length);
         return (
             <div>
                 <AppBar className={clsx(classes.appBar, {
@@ -213,7 +239,7 @@ class AppNavbar extends Component {
                             <IconButton
                                 id="notif-menu"
                                 onClick={this.handleClick} aria-label="show new notifications" color="inherit">
-                                <Badge badgeContent={this.props.notifications.length} color="secondary">
+                                <Badge badgeContent={this.unreadNotifications()} color="secondary">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>

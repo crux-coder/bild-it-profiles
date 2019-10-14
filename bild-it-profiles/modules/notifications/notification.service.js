@@ -11,8 +11,21 @@ function createNotification(payload = {}) {
     return exercise;
 };
 
+function updateNotifications(payload = {}) {
+    payload.map(updatedNotification => {
+        Notification.findById(updatedNotification._id)
+            .then(notification => {
+                const { read } = updatedNotification;
+                notification.read = read;
+                return notification;
+            }).then(notification => notification.save())
+    });
+    return payload;
+};
+
 
 module.exports = {
     fetchNotifications,
     createNotification,
+    updateNotifications
 };

@@ -15,4 +15,10 @@ router.post('/', auth(), (req, res) => {
     notification.then(notification => res.json(notification));
 });
 
+router.post('/update', auth(), (req, res) => {
+    const notifications = NotificationService.updateNotifications(req.body);
+    console.log(notifications)
+    // res.json(notifications);
+});
+
 module.exports = router;

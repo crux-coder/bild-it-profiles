@@ -28,10 +28,12 @@ connection.once('open', () => {
 const exerciseRouter = require('./modules/exercises/exercise.controller');
 const userRouter = require('./modules/users/user.controller');
 const commentRouter = require('./modules/comments/comment.controller');
+const notificationRouter = require('./modules/notifications/notification.controller');
 
 app.use('/v1/api/exercises', exerciseRouter);
 app.use('/v1/api/users', userRouter);
 app.use('/v1/api/comments', commentRouter);
+app.use('/v1/api/notifications', notificationRouter);
 
 
 
